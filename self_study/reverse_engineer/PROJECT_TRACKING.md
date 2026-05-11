@@ -8,7 +8,11 @@
 ## 📈 进度 (Progress)
 1. **[已完成]** 顶层架构拆解：完成对核心目录（`src/`, `apps/`, `extensions/`, `packages/`）的分析，梳理了微内核与控制平面（Control Plane）设计，输出至 `top_level_analysis.md`。
 2. **[已完成]** 方法论工程化：将子 Agent 隔离分析的工作流抽象为全局复用的 Skill (`isolated-investigation`)，并已全局安装。
-3. **[待进行]** 针对具体子模块的深度分析（如消息管线、插件系统的生命周期、Agents 调度逻辑等）。将在新的 Session 中利用刚建立的 Skill 展开。
+3. **[已完成]** 经典设计模式映射：识别了适配器、观察者、策略、代理等 GoF 模式在项目中的具体应用场景，输出至 `design_patterns.md`，为后续源码拆解奠定了术语基础。
+4. **[待进行]** 核心业务逻辑深度拆解：
+   - **消息管线 (Message Pipeline)**：分析消息如何从适配器进入分发器，并最终返回。
+   - **插件系统生命周期 (Plugin Lifecycle)**：深入研究 Loader 如何使用 Proxy 和 Registry 实现安全加载。
+   - **Agent 调度与记忆 (Agent & Memory)**：探究模型策略选择与长效记忆的集成逻辑。
 
 ## 🛠️ 方法论 (Methodology)
 1. **控制面板模式**：主 Agent 作为战略指挥中心，掌握整体架构大纲与已得出的结论。
