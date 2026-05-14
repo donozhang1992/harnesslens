@@ -1,5 +1,7 @@
 # OpenClaw 逆向工程分析跟踪
 
+> 📌 **主战手册与学习入口**：请参阅 [python_learning_plan.md](./python_learning_plan.md) 获取完整的“1个月 Python 后端架构迁移与自研路线图”。后续所有的代码拆解与实战开发均以此文档为总指导。
+
 ## 🎯 目标 (Goal)
 系统性地逆向分析 OpenClaw 项目的整体架构与核心业务链路。
 在深入分析子模块代码时，采用“隔离分析”策略，通过调用子 Agent (Sub-Agent) 完成代码检索和梳理，确保主对话 Session 的上下文始终保持精简，避免 Token 溢出或上下文污染。
@@ -8,13 +10,13 @@
 2. 我能够徒手创建一个这样级别的开源项目并发布
 
 ## 📈 进度 (Progress)
-1. **[已完成]** 顶层架构拆解：完成对核心目录（`src/`, `apps/`, `extensions/`, `packages/`）的分析，梳理了微内核与控制平面（Control Plane）设计，输出至 `top_level_analysis.md`。
-2. **[已完成]** 方法论工程化：将子 Agent 隔离分析的工作流抽象为全局复用的 Skill (`isolated-investigation`)，并已全局安装。
-3. **[已完成]** 经典设计模式映射：识别了适配器、观察者、策略、代理等 GoF 模式在项目中的具体应用场景，输出至 `design_patterns.md`，为后续源码拆解奠定了术语基础。
-4. **[待进行]** 核心业务逻辑深度拆解：
-   - **消息管线 (Message Pipeline)**：分析消息如何从适配器进入分发器，并最终返回。
-   - **插件系统生命周期 (Plugin Lifecycle)**：深入研究 Loader 如何使用 Proxy 和 Registry 实现安全加载。
-   - **Agent 调度与记忆 (Agent & Memory)**：探究模型策略选择与长效记忆的集成逻辑。
+1. **[已完成]** 顶层架构拆解：完成对 OpenClaw C++/TS 核心目录的初步分析，梳理了微内核与控制平面设计。
+2. **[已完成]** 战略重构：根据 AIE 主战场需求，将学习计划重构为“Python 后端架构迁移”，确立了以 FastAPI, Kafka, Celery, LangGraph 为核心的 1 个月实战路径，输出至 `python_learning_plan.md`。
+3. **[进行中]** Phase 1: 底座夯实 (Week 1)。正在进行 FastAPI + Pydantic + SQLAlchemy 的基础架构设计。
+4. **[待进行]** 核心业务逻辑深度拆解与迁移：
+   - **消息管线与 Kafka 映射**：将 OpenClaw 的 Message Pipeline 映射至 Kafka 事件总线。
+   - **Agent 调度与 LangGraph**：利用 LangGraph 复现 OpenClaw 的 Agent 决策循环。
+   - **分布式任务与 Celery**：将长耗时任务迁移至 Celery 后端。
 
 ## 🛠️ 方法论 (Methodology)
 1. **控制面板模式**：主 Agent 作为战略指挥中心，掌握整体架构大纲与已得出的结论。
