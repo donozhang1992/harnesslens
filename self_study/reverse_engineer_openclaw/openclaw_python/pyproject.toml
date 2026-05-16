@@ -17,6 +17,6 @@ dev = [
     "pytest>=8"
 ]
 
-[tool.pytest.int_options]
+[tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
