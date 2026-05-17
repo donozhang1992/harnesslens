@@ -78,10 +78,82 @@ Not required today:
 - Real database migration.
 - Complete SQLAlchemy persistence.
 
+## Completed Today
+
+- Finished schema test closure:
+  - added valid payload coverage for `SessionRead`
+  - added valid payload coverage for `MessageRead`
+  - confirmed `SessionStatus` is used
+- Verified tests:
+
+```text
+10 passed, 1 warning
+```
+
+- Designed the minimum request flows for:
+  - `POST /sessions`
+  - `GET /sessions/{session_id}`
+  - `POST /sessions/{session_id}/messages`
+  - `GET /sessions/{session_id}/messages`
+- Built the first route / service / repository skeleton:
+  - `app/api/routes/sessions.py`
+  - `app/services/sessions.py`
+  - `app/repositories/sessions.py`
+- Added the FastAPI app composition in `app/main.py`.
+- Verified the registered routes with the project virtual environment:
+
+```text
+POST /sessions
+GET /sessions/{session_id}
+POST /sessions/{session_id}/messages
+GET /sessions/{session_id}/messages
+```
+
+## Dev Server Decision
+
+Keep production dependencies light:
+
+```toml
+dependencies = [
+    "fastapi>=0.110",
+    "pydantic>=2",
+    "structlog>=24",
+]
+```
+
+Use `uvicorn[standard]` as a development dependency:
+
+```toml
+dev = [
+    "pytest>=8",
+    "uvicorn[standard]>=0.30",
+]
+```
+
+Development startup command:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
+```
+
+Reasoning:
+
+```text
+FastAPI defines the application and routes.
+Uvicorn is the ASGI server that listens for HTTP requests and serves app.main:app.
+Keeping uvicorn in dev avoids making the base runtime dependency set heavier than necessary.
+```
+
 ## Day 3 Definition of Done
 
-- Schema tests are green.
-- The route / service / repository split can be explained in your own words.
-- A minimum Session / Message API design sketch exists.
-- Extra code is welcome, but not required for today's success.
+- [x] Schema tests are green.
+- [x] The route / service / repository split can be explained in your own words.
+- [x] A minimum Session / Message API design sketch exists.
+- [x] Route / service / repository code skeleton exists.
+- [x] FastAPI app registers the Session / Message endpoints.
 
+## Remaining Notes
+
+- `.pytest_cache` still emits a permission warning, but it does not affect test validity.
+- Current repository storage is in-memory only; data is cleared when the process restarts.
+- SQLAlchemy, Alembic, and real persistence remain intentionally out of scope for Day 3.
