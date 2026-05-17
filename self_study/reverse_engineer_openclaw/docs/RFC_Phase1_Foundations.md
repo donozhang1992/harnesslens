@@ -1,5 +1,9 @@
 # RFC: Phase 1 - Foundations (OpenClaw Python)
 
+> 状态说明：本文件是早期草案，保留作历史参考。当前行动版 RFC 请以仓库根目录的 [`RFC_Phase1_Foundations.md`](../RFC_Phase1_Foundations.md) 为准。若两者出现差异，以根目录版本为准。
+
+> 重要澄清：`openclaw_python` 是 Python 版后端总目录，不是 `openclaw/src/gateway` 的逐文件翻译。Gateway 的启动编排用于训练控制面分层思维；实际 Python 目录会把职责拆到 `main.py`、`core/`、`api/`、`schemas/`、`models/`、`services/`、`db/` 等层。
+
 ## 1. 状态 (Status)
 **提案人**: Gemini CLI
 **状态**: 草案 (Draft)
