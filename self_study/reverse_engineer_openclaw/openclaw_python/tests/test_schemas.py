@@ -16,6 +16,19 @@ def test_session_create_accepts_valid_payload():
     
     assert isinstance(session.user_id, UUID)
 
+def test_session_read_accepts_valid_payload():
+    session = SessionRead(
+        id=uuid4(),
+        user_id=uuid4(),
+        title="Test Session",
+        status=SessionStatus.ACTIVE,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+        metadata={"key": "value"}
+    )
+    
+    assert session.status == SessionStatus.ACTIVE
+
 def test_message_create_accepts_valid_payload():
     message = MessageCreate(
         role=MessageRole.USER,
@@ -24,6 +37,18 @@ def test_message_create_accepts_valid_payload():
     )
     
     assert message.role == MessageRole.USER
+
+def test_message_read_accepts_valid_payload():
+    message = MessageRead(
+        id=uuid4(),
+        session_id=uuid4(),
+        role=MessageRole.USER,
+        content="Hello, world!",
+        metadata={"key": "value"},
+        created_at=datetime.now(),
+    )
+    
+    assert isinstance(message.id, UUID)
 
 def test_message_read_rejects_invalid_session_id():
     with pytest.raises(ValidationError) as exc_info:
