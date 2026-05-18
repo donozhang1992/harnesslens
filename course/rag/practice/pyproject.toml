@@ -1,0 +1,31 @@
+[project]
+name = "practice"
+version = "0.1.0"
+description = "Practice"
+requires-python = ">=3.11"
+dependencies = [
+    "sentence-transformers>=2.2.2",
+    "transformers",
+    "openai>=1.0.0",
+    "numpy>=1.24.0,<2.0.0",
+    "tiktoken>=0.5.0",
+    "python-dotenv",
+    "langchain-community",
+    "langchain_core",
+    "jq",
+    "langchain-chroma>=0.1.2",
+    "langchain_huggingface",
+    "faiss-cpu",
+    "langchain_openai",
+    "langchain_classic",
+
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipykernel"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

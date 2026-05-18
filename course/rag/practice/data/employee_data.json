@@ -1,0 +1,9 @@
+{
+    "employee_id": "E001",
+    "name": "John Doe",
+    "department": "Engineering",
+    "contact_info": {
+        "email": "john.doe@example.com",
+        "phone": "123-456-7890"
+    }
+}

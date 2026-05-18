@@ -1,0 +1,25 @@
+[project]
+name = "my-first-rag-project"
+version = "0.1.0"
+description = "A simple RAG project"
+requires-python = ">=3.11"
+dependencies = [
+    "sentence-transformers>=2.2.2",
+    "faiss-cpu>=1.7.4",
+    "openai>=1.0.0",
+    "numpy>=1.24.0,<2.0.0",
+    "tiktoken>=0.5.0",
+    "python-dotenv",
+    "langchain-community",
+    "unstructured==0.22.28",
+    "python-docx>=1.1.2"
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipykernel"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

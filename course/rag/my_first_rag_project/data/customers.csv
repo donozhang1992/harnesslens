@@ -1,0 +1,4 @@
+employee_id,name,department,email,phone
+E001,John Doe,Engineering,john.doe@example.com,123-456-7890
+E002,Jane Smith,Marketing,jane.smith@example.com,987-654-3210
+E003,Alice Brown,HR,alice.brown@example.com,456-789-0123

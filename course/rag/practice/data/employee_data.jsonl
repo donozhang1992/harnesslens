@@ -1,0 +1,3 @@
+{"employee_id": "E001", "name": "John Doe", "department": "Engineering", "contact_info": {"email": "john.doe@example.com", "phone": "123-456-7890"}}
+{"employee_id": "E002", "name": "Jane Smith", "department": "Marketing", "contact_info": {"email": "jane.smith@example.com", "phone": "987-654-3210"}}
+{"employee_id": "E003", "name": "Alice Brown", "department": "HR", "contact_info": {"email": "alice.brown@example.com", "phone": "456-789-0123"}}
