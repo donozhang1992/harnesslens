@@ -51,3 +51,17 @@
 - `03_TRACKING.md`: 当前阶段、周目标、每日记录索引与进度记录规则。
 - `daily_logs/`: 每日计划、执行进度、学习收获、遗留问题；以后查看和更新进度优先使用这里。
 - `docs/`: 稳定架构分析、设计模式、RFC 等长期知识库。
+
+---
+
+## Day 4 Update
+
+- [Day 4 SQLAlchemy Foundation](./daily_logs/day4_sqlalchemy_foundation.md): Executed on 2026-05-22 after a busy week. Covered SQLAlchemy Base, Session/Message ORM models, async engine/sessionmaker setup, SQLite table creation, and verification that `sessions` and `messages` exist in `openclaw.db`.
+
+## Next Planned Work
+
+- [Day 5 Weekend Session Persistence Plan](./daily_logs/day5_weekend_session_persistence_plan.md): Planned for 2026-05-23 to 2026-05-24 with only 1-3 hours available. Target the smallest useful persistence loop: make `POST /sessions` and `GET /sessions/{session_id}` use SQLite instead of the in-memory repository. Keep Message persistence, Alembic migration setup, and full test expansion out of scope unless extra time becomes available.
+
+## Next Week Strategy
+
+- Keep Phase 2 out of scope until Phase 1 is reliable, testable, and explainable. If about 2 hours per day are available next week, focus on closing Phase 1 as a persistent Session/Message backend with tests, Alembic, and basic structured logging. Details are captured in the [Day 5 Weekend Session Persistence Plan](./daily_logs/day5_weekend_session_persistence_plan.md).
