@@ -65,3 +65,7 @@
 ## Next Week Strategy
 
 - Keep Phase 2 out of scope until Phase 1 is reliable, testable, and explainable. If about 2 hours per day are available next week, focus on closing Phase 1 as a persistent Session/Message backend with tests, Alembic, and basic structured logging. Details are captured in the [Day 5 Weekend Session Persistence Plan](./daily_logs/day5_weekend_session_persistence_plan.md).
+
+## Study Notes
+
+- [Phase 1 Learning Map](./docs/phase1_learning_map.md): Layered study note that organizes the learned backend concepts by difficulty and dependency order, from boundary ownership and Pydantic contracts to SQLAlchemy, async persistence, testing, and the next learning target.
