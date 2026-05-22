@@ -9,6 +9,9 @@ requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.110",
     "pydantic>=2",
+    "sqlalchemy>=2",
+    "aiosqlite>=0.19",
+    "alembic>=1.13",
     "structlog>=24",
 ]
 
