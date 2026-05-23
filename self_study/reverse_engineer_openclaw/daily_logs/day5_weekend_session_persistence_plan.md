@@ -160,6 +160,117 @@ By the end of the weekend, the desired outcome is:
 Session creation and lookup no longer depend on in-memory dictionaries; they persist through SQLite.
 ```
 
+## 2026-05-23 Progress Update
+
+Day 5's core persistence loop was completed.
+
+Completed today:
+
+- Reviewed Day 4's SQLAlchemy foundation:
+  - `app/db/base.py`
+  - `app/db/session.py`
+  - `app/models/session.py`
+  - `app/models/message.py`
+- Added `get_db_session()` in `app/db/session.py`:
+
+```text
+AsyncSessionLocal()
+  -> async with
+  -> yield AsyncSession to FastAPI
+```
+
+- Converted `POST /sessions` and `GET /sessions/{session_id}` route handlers to async handlers.
+- Injected `AsyncSession` into those route handlers via `Depends(get_db_session)`.
+- Converted `session_service.create_session` and `session_service.get_session` to async functions that accept `db`.
+- Converted repository session create/get operations to use SQLAlchemy instead of the in-memory `_sessions` dict:
+  - `save_session(db, session)`
+  - `get_session(db, session_id)`
+- Added repository-local mapper helpers to isolate the `metadata` / `metadata_` naming mismatch:
+  - `_session_dict_to_model(...)`
+  - `_session_model_to_dict(...)`
+- Imported `MessageModel` in the repository only to ensure SQLAlchemy can resolve the `SessionModel.messages` relationship target.
+
+Verified today:
+
+- Existing schema tests still pass:
+
+```text
+10 passed
+```
+
+- Direct service/repository persistence check succeeded:
+
+```text
+create_session(...)
+  -> writes SessionModel through AsyncSession
+get_session(...)
+  -> reads the same row back from SQLite
+```
+
+- HTTP-level verification succeeded through FastAPI:
+
+```text
+POST /sessions
+  -> returned id d33bf743-16ad-43bf-9f13-90256e72dc00
+
+GET /sessions/d33bf743-16ad-43bf-9f13-90256e72dc00
+  -> returned the same id, title, status, and metadata
+```
+
+- SQLite verification confirmed the row exists in `openclaw.db`.
+
+Concepts clarified today:
+
+- `AsyncSessionLocal` is an `AsyncSession` factory, not a generator factory.
+- `get_db_session()` is the async generator dependency.
+- `yield` allows FastAPI to return to the dependency after the request and close the session context.
+- Request-scoped `AsyncSession` is an architectural choice and the common FastAPI + SQLAlchemy default, not an intrinsic property of `AsyncSession`.
+- Engine / connection pool can be shared; `AsyncSession` should remain a short-lived unit of work.
+- SQLite can have multiple connections to the same local file, but concurrent writes are still constrained by SQLite locking.
+- `await db.refresh(model)` mutates the passed ORM object with database-loaded values and returns `None`.
+- `scalar_one_or_none()` returns one model, `None`, or raises if more than one row is found.
+
+Current caveats:
+
+- `create_message` and `list_messages` still call the old repository shape and are not part of today's completed persistence loop.
+- Message persistence remains out of scope.
+- No focused repository/API persistence test has been added yet.
+- Alembic initialization remains out of scope.
+- Structlog remains out of scope.
+
+Recommended starting point for the next session:
+
+1. Read this progress update first.
+2. Review these files:
+
+```text
+app/db/session.py
+app/api/routes/sessions.py
+app/services/sessions.py
+app/repositories/sessions.py
+```
+
+3. Start with one of these next tasks:
+
+```text
+Option A:
+  Add a focused test for POST /sessions + GET /sessions/{session_id}
+  so today's persistence loop is protected.
+
+Option B:
+  Update create_message/list_messages so they do not call the old
+  repository.get_session(session_id) signature.
+
+Option C:
+  Begin Message persistence after reviewing the Session persistence path.
+```
+
+Suggested prompt for tomorrow:
+
+```text
+请先带我复盘 Day 5 的 Session persistence 链路，然后从添加一个最小 persistence test 开始。
+```
+
 ## Next Week Strategy
 
 If roughly 2 hours per day are available next week, do not rush into Phase 2 yet.

@@ -4,6 +4,8 @@
 '''
 from uuid import UUID, uuid4
 from datetime import datetime, timezone
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.schemas.session import SessionCreate, SessionRead, SessionStatus
 from app.schemas.message import MessageCreate, MessageRead
 import app.repositories.sessions as repository
@@ -11,7 +13,7 @@ import app.repositories.sessions as repository
 class SessionNotFoundError(Exception):
     pass
 
-def create_session(payload: SessionCreate) -> SessionRead:
+async def create_session(db: AsyncSession, payload: SessionCreate) -> SessionRead:
     session = {
         "id": uuid4(),
         "user_id": payload.user_id,
@@ -21,11 +23,11 @@ def create_session(payload: SessionCreate) -> SessionRead:
         "created_at": datetime.now(timezone.utc),
         "updated_at": datetime.now(timezone.utc),
     }
-    repository.save_session(session)
-    return SessionRead(**session)
+    saved_session = await repository.save_session(db, session)
+    return SessionRead(**saved_session)
     
-def get_session(session_id: UUID) -> SessionRead:
-    session = repository.get_session(session_id)
+async def get_session(db: AsyncSession, session_id: UUID) -> SessionRead:
+    session = await repository.get_session(db, session_id)
     if not session:
         raise SessionNotFoundError(f"Session with id {session_id} not found")
     return SessionRead(**session)

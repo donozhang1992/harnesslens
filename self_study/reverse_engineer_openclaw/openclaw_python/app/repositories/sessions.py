@@ -5,16 +5,53 @@
 
 from uuid import UUID
 from collections import defaultdict
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+
+from app.models.message import MessageModel  # noqa: F401 - register relationship target
+from app.models.session import SessionModel
 
 _sessions: dict[UUID, dict] = {}
 _messages: defaultdict[UUID, list[dict]] = defaultdict(list)
 
-def save_session(session: dict) -> dict:
-    _sessions[session["id"]] = session
-    return session
+def _session_dict_to_model(session: dict) -> SessionModel:
+    return SessionModel(
+        id=session["id"],
+        user_id=session["user_id"],
+        title=session["title"],
+        status=session["status"],
+        metadata_=session["metadata"],
+        created_at=session["created_at"],
+        updated_at=session["updated_at"],
+    )
 
-def get_session(session_id: UUID) -> dict | None:
-    return _sessions.get(session_id)
+def _session_model_to_dict(model: SessionModel) -> dict:
+    return {
+        "id": model.id,
+        "user_id": model.user_id,
+        "title": model.title,
+        "status": model.status,
+        "metadata": model.metadata_,
+        "created_at": model.created_at,
+        "updated_at": model.updated_at,
+    }
+
+async def save_session(db: AsyncSession, session: dict) -> dict:
+    model = _session_dict_to_model(session)
+    db.add(model)
+    await db.commit()
+    await db.refresh(model)
+    return _session_model_to_dict(model)
+
+async def get_session(db: AsyncSession, session_id: UUID) -> dict | None:
+    sql = select(SessionModel).where(SessionModel.id == session_id)
+    result = await db.execute(sql)
+    model = result.scalar_one_or_none()
+    
+    if model is None:
+        return None
+    
+    return _session_model_to_dict(model)
 
 def save_message(message: dict) -> dict:
     session_id = message["session_id"]

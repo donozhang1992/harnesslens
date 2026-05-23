@@ -60,7 +60,12 @@
 
 ## Next Planned Work
 
-- [Day 5 Weekend Session Persistence Plan](./daily_logs/day5_weekend_session_persistence_plan.md): Planned for 2026-05-23 to 2026-05-24 with only 1-3 hours available. Target the smallest useful persistence loop: make `POST /sessions` and `GET /sessions/{session_id}` use SQLite instead of the in-memory repository. Keep Message persistence, Alembic migration setup, and full test expansion out of scope unless extra time becomes available.
+- [Day 5 Weekend Session Persistence Plan](./daily_logs/day5_weekend_session_persistence_plan.md): Core loop completed on 2026-05-23. `POST /sessions` and `GET /sessions/{session_id}` now flow through FastAPI dependency injection, async service functions, SQLAlchemy repository methods, and SQLite persistence. Verified with existing tests, direct service/repository persistence check, HTTP-level POST/GET check, and SQLite row inspection.
+
+## Next Session Starting Point
+
+- First add a focused persistence test for the completed Session create/get loop, or repair the out-of-scope message endpoints so they no longer call the old `repository.get_session(session_id)` signature.
+- Message persistence, Alembic setup, broader API tests, and structlog remain later Phase 1 tasks.
 
 ## Next Week Strategy
 
