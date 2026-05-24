@@ -32,8 +32,8 @@ async def get_session(db: AsyncSession, session_id: UUID) -> SessionRead:
         raise SessionNotFoundError(f"Session with id {session_id} not found")
     return SessionRead(**session)
 
-def create_message(session_id: UUID, payload: MessageCreate) -> MessageRead:
-    session = repository.get_session(session_id)
+async def create_message(db: AsyncSession, session_id: UUID, payload: MessageCreate) -> MessageRead:
+    session = await repository.get_session(db, session_id)
     if not session:
         raise SessionNotFoundError(f"Session with id {session_id} not found")
     message = {
@@ -45,12 +45,12 @@ def create_message(session_id: UUID, payload: MessageCreate) -> MessageRead:
         "created_at": datetime.now(timezone.utc),
     }
     
-    repository.save_message(message)
-    return MessageRead(**message)
+    saved_message = await repository.save_message(db, message)
+    return MessageRead(**saved_message)
 
-def list_messages(session_id: UUID) -> list[MessageRead]:
-    session = repository.get_session(session_id)
+async def list_messages(db: AsyncSession, session_id: UUID) -> list[MessageRead]:
+    session = await repository.get_session(db, session_id)
     if not session:
         raise SessionNotFoundError(f"Session with id {session_id} not found")
-    messages = repository.list_messages(session_id)
+    messages = await repository.list_messages(db, session_id)
     return [MessageRead(**message) for message in messages]

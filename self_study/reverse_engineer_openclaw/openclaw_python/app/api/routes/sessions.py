@@ -37,15 +37,22 @@ async def get_session(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
 @router.post("/{session_id}/messages", response_model=MessageRead, status_code=status.HTTP_201_CREATED)
-def create_message(session_id: UUID, payload: MessageCreate) -> MessageRead:
+async def create_message(
+    session_id: UUID, 
+    payload: MessageCreate,
+    db: AsyncSession = Depends(get_db_session),
+) -> MessageRead:
     try:
-        return session_service.create_message(session_id, payload)
+        return await session_service.create_message(db, session_id, payload)
     except SessionNotFoundError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
 @router.get("/{session_id}/messages", response_model=list[MessageRead])
-def list_messages(session_id: UUID) -> list[MessageRead]:
+async def list_messages(
+    session_id: UUID,
+    db: AsyncSession = Depends(get_db_session),
+) -> list[MessageRead]:
     try:
-        return session_service.list_messages(session_id)
+        return await session_service.list_messages(db, session_id)
     except SessionNotFoundError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
