@@ -38,6 +38,9 @@
 - [Day 1 Schema Contracts](./daily_logs/day1_schema_contracts.md): Gateway 生命周期理解、Python 分层映射、Schema 契约设计。
 - [Day 2 Schema Tests](./daily_logs/day2_schema_tests.md): Pydantic schema tests 编写、运行与 pytest 学习收获。
 - [Day 3 API Boundary Plan](./daily_logs/day3_api_boundary_plan.md): Schema 测试收尾、最小 API / Service / Repository 边界设计。
+- [Day 4 SQLAlchemy Foundation](./daily_logs/day4_sqlalchemy_foundation.md): SQLAlchemy Base、Session/Message ORM models、async engine/sessionmaker 与 SQLite 建表验证。
+- [Day 5 Weekend Session Persistence Plan](./daily_logs/day5_weekend_session_persistence_plan.md): `POST /sessions` 和 `GET /sessions/{session_id}` 打通 FastAPI -> service -> repository -> SQLite 持久化链路。
+- [Day 6 Persistence Tests And HTTP Boundary](./daily_logs/day6_persistence_tests_and_http_boundary.md): Session/Message repository persistence tests、HTTP boundary persistence test、Message DB persistence 与测试边界理解。
 
 当前请以最新 daily log 为当天学习计划与进度来源。
 
@@ -54,18 +57,22 @@
 
 ---
 
-## Day 4 Update
+## Latest Update
 
-- [Day 4 SQLAlchemy Foundation](./daily_logs/day4_sqlalchemy_foundation.md): Executed on 2026-05-22 after a busy week. Covered SQLAlchemy Base, Session/Message ORM models, async engine/sessionmaker setup, SQLite table creation, and verification that `sessions` and `messages` exist in `openclaw.db`.
-
-## Next Planned Work
-
-- [Day 5 Weekend Session Persistence Plan](./daily_logs/day5_weekend_session_persistence_plan.md): Core loop completed on 2026-05-23. `POST /sessions` and `GET /sessions/{session_id}` now flow through FastAPI dependency injection, async service functions, SQLAlchemy repository methods, and SQLite persistence. Verified with existing tests, direct service/repository persistence check, HTTP-level POST/GET check, and SQLite row inspection.
+- [Day 6 Persistence Tests And HTTP Boundary](./daily_logs/day6_persistence_tests_and_http_boundary.md): Completed on 2026-05-24. Session and Message operations are now database-backed, protected by repository persistence tests, and covered at the HTTP boundary. Local suite reached `15 passed`.
 
 ## Next Session Starting Point
 
-- First add a focused persistence test for the completed Session create/get loop, or repair the out-of-scope message endpoints so they no longer call the old `repository.get_session(session_id)` signature.
-- Message persistence, Alembic setup, broader API tests, and structlog remain later Phase 1 tasks.
+- Start Day 7 with Alembic initialization and the first migration for `sessions` and `messages`.
+- First review:
+  - `openclaw_python/app/db/base.py`
+  - `openclaw_python/app/db/session.py`
+  - `openclaw_python/app/models/session.py`
+  - `openclaw_python/app/models/message.py`
+  - `openclaw_python/scripts/create_tables.py`
+  - `openclaw_python/tests/test_session_persistence.py`
+- Goal: replace ad hoc `Base.metadata.create_all` development setup with a migration workflow that can be explained, regenerated, and applied consistently.
+- Structlog remains after Alembic unless there is extra time.
 
 ## Next Week Strategy
 
