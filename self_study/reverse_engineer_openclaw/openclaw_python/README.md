@@ -4,18 +4,35 @@ OpenClaw Python is a Python reimplementation of the core backend architecture in
 
 The goal is not a line-by-line port. The project rebuilds the same backend responsibilities in a Python-native stack: API boundaries, data contracts, session/message persistence, agent orchestration, async job execution, observability, and an extensible tool/plugin layer.
 
+## Strategy Update
+
+As of 2026-05-26, this project is scoped as the backend foundation part of a broader AI Engineer portfolio plan.
+
+The near-term goal is to finish:
+
+```text
+Phase 1 + basic observability
+```
+
+After that, the main study line moves to LLM Twin / LLM Engineers Handbook for DDD, data pipelines, RAG, evaluation, deployment, CI/CD, and LLMOps.
+
+The original OpenClaw-inspired Phase 2-4 ideas remain valuable backlog, but they are no longer the immediate execution path.
+
 ## Scope
 
-Planned core capabilities:
+Current active scope:
 
 - FastAPI backend gateway for HTTP APIs and later realtime streaming endpoints.
-- Pydantic v2 request/response contracts for users, sessions, messages, tools, and agent runs.
+- Pydantic v2 request/response contracts for users, sessions, and messages.
 - SQLAlchemy 2.0 async persistence with Alembic migrations.
 - Session and message CRUD APIs.
+- Structured JSON logging with structlog.
+
+Paused backlog:
+
 - Agent orchestration using LangGraph.
 - Long-running task execution using Celery and Redis.
 - Event-driven decoupling using Kafka where useful.
-- Structured JSON logging with structlog.
 - Later memory/RAG support using LlamaIndex.
 - Lightweight Python-native tool/plugin registry.
 

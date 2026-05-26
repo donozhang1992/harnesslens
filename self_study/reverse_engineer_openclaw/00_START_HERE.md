@@ -3,11 +3,25 @@
 欢迎来到 **The Engineering Sovereignty Initiative (技术主权倡议)**。
 这里是你的每日入口。请在每天开始学习和编码前，快速浏览此面板。
 
+## ⚠️ 2026-05-26 战略校准 (Strategy Update)
+
+当前主线已从“完整重构 OpenClaw 四阶段”调整为：
+
+```text
+Backend-grounded AI Engineering
+后端工程地基 -> LLM Twin 逆向/重写 -> RAG / LLMOps -> Portfolio
+```
+
+OpenClaw Python 现在的定位是 **后端工程地基训练项目**。本项目先收口到 **Phase 1 + 基础可观测性**，即 FastAPI、Pydantic、SQLAlchemy、Alembic、测试、structlog 和清晰分层。完成后，主线切换到 LLM Twin / LLM Engineers Handbook，重点训练 DDD、数据管道、RAG、评估、部署和 LLMOps。
+
+OpenClaw 原 Phase 2-4 不删除，进入暂停状态。以后如果时间充裕，尤其是求职稳定后，可以回头继续完成 AI Gateway、Agent 编排、异步总线、插件系统等内容。
+
 ## 🗺️ 导航地图 (Navigation)
 
 *   🎯 **[01_OBJECTIVE.md](./01_OBJECTIVE.md)**: 【看方向】为什么要做这个项目？核心要攻克的 5 大软件工程“战区”是什么。
 *   📅 **[02_SYLLABUS.md](./02_SYLLABUS.md)**: 【看课表】1 个月的详细学习路线图，每周我们需要交付什么。
 *   🔥 **[03_TRACKING.md](./03_TRACKING.md)**: **【每日必看】** 记录本周目标、今日具体任务（To-Do）以及踩坑日记。
+*   🧭 **[04_LLM_TWIN_STRATEGY.md](./04_LLM_TWIN_STRATEGY.md)**: 【新主线】LLM Twin 逆向工程、重写学习、RAG/LLMOps 与 portfolio 宏观计划。
 
 ---
 

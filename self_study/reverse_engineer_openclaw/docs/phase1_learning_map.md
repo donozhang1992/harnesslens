@@ -4,6 +4,18 @@ This note organizes the Phase 1 learning material by conceptual layers, difficul
 
 It is not a daily log. It is a study map for reviewing what has been learned and for continuing the project in a new conversation.
 
+## 2026-05-26 Strategy Update
+
+OpenClaw Python is now scoped as the backend foundation project in a broader AI Engineer portfolio plan.
+
+Current stopping point:
+
+```text
+Phase 1 + basic observability
+```
+
+After Alembic, tests, structlog, and the backend layering explanation are complete, the main study line switches to LLM Twin / LLM Engineers Handbook. OpenClaw Phase 2-4 remains future backlog.
+
 ## How To Update This Note
 
 Use this file as a stable learning map, not as a progress diary.
@@ -232,13 +244,14 @@ It hides the storage implementation from the service layer.
 Current state:
 
 ```text
-repository uses in-memory dictionaries
+repository uses SQLAlchemy AsyncSession and SQLite for Session/Message persistence
 ```
 
-Target state:
+Previous learning transition:
 
 ```text
-repository uses SQLAlchemy AsyncSession and SQLite
+in-memory dictionaries
+  -> SQLAlchemy AsyncSession and SQLite
 ```
 
 ### Why This Layer Matters
@@ -477,21 +490,25 @@ message queue operations
 
 ### What Current Tests Prove
 
-Current tests mainly prove schema validation behavior.
+Current tests prove behavior across three layers:
+
+- Pydantic schema validation;
+- repository-level SQLite persistence;
+- FastAPI HTTP boundary persistence.
 
 They verify things like:
 
 - valid schema payloads are accepted;
 - invalid fields are rejected;
 - message content is normalized or rejected.
+- sessions and messages are saved to SQLite through repository functions;
+- message lists are ordered by `created_at`;
+- HTTP requests can enter through FastAPI, use a test database dependency, and return persisted data.
 
 ### What Current Tests Do Not Yet Prove
 
 They do not yet prove:
 
-- SQLAlchemy models work correctly;
-- repository writes to SQLite;
-- API requests persist data;
 - process restart preserves data;
 - Alembic migrations create the correct schema.
 
@@ -517,10 +534,11 @@ Learn and review in this order:
 9. API tests
 10. Alembic migrations
 11. Structured logging
-12. Phase 2 agent orchestration
+12. Switch to LLM Twin
+13. Future OpenClaw Phase 2 agent orchestration backlog
 ```
 
-Do not jump to Phase 2 until the first eight items feel explainable.
+Do not jump to OpenClaw Phase 2 before Phase 1 + observability is reliable, testable, and explainable. The current mainline switches to LLM Twin after that point.
 
 ## 11. Current Project State
 
@@ -530,48 +548,39 @@ Completed foundation:
 - Pydantic Session/Message schemas exist.
 - Schema tests exist and pass.
 - Route/service/repository skeleton exists.
-- Repository is still in-memory.
 - SQLAlchemy Base exists.
 - Session/Message SQLAlchemy models exist.
 - Async engine/sessionmaker foundation exists.
 - `openclaw.db` was created.
 - SQLite contains `sessions` and `messages` tables.
+- Session and Message operations are database-backed.
+- Repository persistence tests exist.
+- HTTP boundary persistence test exists.
+- Local suite reached `15 passed` on Day 6.
 
 Not yet complete:
 
-- API does not yet write to SQLite.
-- Repository has not yet been converted to `AsyncSession`.
-- Message persistence is not database-backed yet.
 - Alembic is installed but not initialized.
-- SQLAlchemy model/repository/API persistence tests are not yet added.
 - Structlog is installed but not configured.
+- Final architecture/portfolio explanation still needs to be polished.
 
 ## 12. Next Learning Target
 
-The next target is the smallest real persistence loop:
+The next target is replacing ad hoc table creation with a real migration workflow:
 
 ```text
-POST /sessions
-  -> route
-  -> service
-  -> repository
-  -> AsyncSession
-  -> SessionModel
-  -> SQLite row
-
-GET /sessions/{session_id}
-  -> route
-  -> service
-  -> repository
-  -> AsyncSession
-  -> SessionModel
-  -> SessionRead
+Alembic init
+  -> configure async SQLAlchemy database URL
+  -> import Base metadata and models
+  -> generate first migration for sessions/messages
+  -> apply migration to SQLite
+  -> verify tests still pass
 ```
 
 Success sentence:
 
 ```text
-Session creation and lookup no longer depend on in-memory dictionaries; they persist through SQLite.
+The database schema can be explained, regenerated, applied, and versioned through Alembic instead of relying on ad hoc create_all setup.
 ```
 
 ## 13. Learning Principles
@@ -583,4 +592,5 @@ Use these principles for the rest of Phase 1:
 - Let the learner write core pieces when feasible.
 - Use Codex for review, debugging, test running, and architecture checks.
 - Treat "I can explain this in my own words" as part of the definition of done.
-- Keep Phase 2 out of scope until Phase 1 is reliable, testable, and explainable.
+- Keep OpenClaw Phase 2 out of scope until Phase 1 + observability is reliable, testable, and explainable.
+- After that, switch the main learning line to LLM Twin rather than expanding OpenClaw immediately.

@@ -1,5 +1,19 @@
 # RFC: Phase 1 Foundations
 
+## 0. 2026-05-26 战略备注
+
+本 RFC 仍然有效，但项目路线已重新校准。
+
+OpenClaw Python 当前定位为 **后端工程地基训练项目**，目标是收口到：
+
+```text
+Phase 1 + 基础可观测性
+```
+
+也就是完成 FastAPI、Pydantic、SQLAlchemy Async、Alembic、Session/Message API、测试、基础 structlog 和清晰分层。完成后，主线切换到 LLM Twin / LLM Engineers Handbook，用于训练 DDD、数据管道、RAG、评估、部署和 LLMOps。
+
+因此，下文中提到“Phase 2 到 Phase 4 逐步引入”的能力，现在改为 **暂停 / backlog**。它们没有被删除；以后如果有余力，可以回到 OpenClaw 继续做 AI Gateway、Agent 编排、异步总线和插件系统。
+
 ## 1. 背景
 
 Phase 1 的目标是为 `openclaw_python` 建立一个可演进、可测试、可观测的后端底座。我们不会逐行翻译 OpenClaw 的 TypeScript 代码，而是先逆向理解 `gateway`、`config`、`sessions` 的系统职责，再用 Python 现代后端栈重新实现同构能力。
@@ -32,6 +46,8 @@ Phase 1 暂不实现以下内容：
 - 完整认证授权体系。
 
 这些能力会在 Phase 2 到 Phase 4 逐步引入。
+
+> 2026-05-26 更新：Phase 2 到 Phase 4 当前暂停，作为未来 backlog 保留。近期主线将在 Phase 1 收口后切换到 LLM Twin。
 
 ## 4. 逆向范围
 

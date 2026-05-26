@@ -2,6 +2,23 @@
 
 **The Engineering Sovereignty Initiative**
 
+## 0. 2026-05-26 目标校准
+
+本文件描述的五大战区仍然是长期能力地图，但当前项目执行顺序已经调整。
+
+OpenClaw Python 的近期目标不再是完整实现所有战区，而是先把 **战区一：契约与边界**、**战区三：状态与一致性**、以及 **战区五中的基础结构化日志** 收口成一个后端工程地基项目。
+
+完成这个地基后，主线切换到 LLM Twin / LLM Engineers Handbook。LLM Twin 将承担更直接的 AI Engineer 求职训练：DDD、数据管道、RAG、评估、部署、CI/CD 和 LLMOps。
+
+因此，本项目现在的定位是：
+
+```text
+OpenClaw Python = backend foundation
+LLM Twin = AI / LLMOps portfolio core
+```
+
+OpenClaw 的 Agent 编排、异步总线、RAG 和插件系统不删除，只暂停为以后可恢复的 backlog。
+
 ## 1. 战略愿景 (Vision)
 
 本项目不仅是为了“学会写 Python”，而是通过将 OpenClaw 工业级架构内核迁移至 **Python 现代后端栈**，实现从“业务实现者”向“系统架构主权者”的转型。

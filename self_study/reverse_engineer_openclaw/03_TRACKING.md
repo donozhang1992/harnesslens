@@ -2,6 +2,8 @@
 
 **当前阶段**: Phase 1: 底座夯实与数据契约 (Week 1)
 
+**2026-05-26 战略更新**: OpenClaw Python 当前只收口到 **Phase 1 + 基础可观测性**。完成 Alembic、基础 structlog、测试与分层解释后，主线切换到 [LLM Twin 宏观实践计划](./04_LLM_TWIN_STRATEGY.md)。OpenClaw Phase 2-4 暂停并保留为以后可恢复的 backlog。
+
 **节奏校准**: 2026-05-14 晚间只作为 Day 0 预热；2026-05-15 作为正式 Day 1。
 
 ---
@@ -22,6 +24,8 @@
 
 建立 OpenClaw Python 版后端底座：基础 API 框架、数据契约、持久化层，以及最小可用的 Session / Message 操作接口。
 
+本周也是 OpenClaw 当前主线的收口周。不要提前进入 LangGraph、LLM、Kafka、Celery、RAG 或插件系统；这些能力会先转移到 LLM Twin 主线中实践。
+
 验收标准：
 
 - [ ] `openclaw_python` 项目初始化完成。
@@ -29,6 +33,7 @@
 - [ ] SQLAlchemy Models 与 Alembic 配置完成，数据库表创建成功。
 - [ ] 提供基础 RESTful API 端点用于操作 Session 和 Message。
 - [ ] 应用代码不使用 `print`，日志走结构化日志。
+- [ ] 能解释当前项目作为 AI Gateway foundation 的分层、停止线和后续切换理由。
 
 ---
 
@@ -50,8 +55,9 @@
 
 - `00_START_HERE.md`: 每日入口与操作协议。
 - `01_OBJECTIVE.md`: 项目愿景与工程战区。
-- `02_SYLLABUS.md`: 月度路线图与技术栈。
+- `02_SYLLABUS.md`: OpenClaw 原月度路线图与暂停标记；当前只执行 Phase 1 + observability。
 - `03_TRACKING.md`: 当前阶段、周目标、每日记录索引与进度记录规则。
+- `04_LLM_TWIN_STRATEGY.md`: 新主线的 LLM Twin 逆向、重写、RAG/LLMOps 与 portfolio 宏观计划。
 - `daily_logs/`: 每日计划、执行进度、学习收获、遗留问题；以后查看和更新进度优先使用这里。
 - `docs/`: 稳定架构分析、设计模式、RFC 等长期知识库。
 
@@ -76,7 +82,8 @@
 
 ## Next Week Strategy
 
-- Keep Phase 2 out of scope until Phase 1 is reliable, testable, and explainable. If about 2 hours per day are available next week, focus on closing Phase 1 as a persistent Session/Message backend with tests, Alembic, and basic structured logging. Details are captured in the [Day 5 Weekend Session Persistence Plan](./daily_logs/day5_weekend_session_persistence_plan.md).
+- Keep OpenClaw Phase 2 out of scope. First close Phase 1 as a persistent Session/Message backend with tests, Alembic, and basic structured logging. Details are captured in the [Day 5 Weekend Session Persistence Plan](./daily_logs/day5_weekend_session_persistence_plan.md).
+- After that, switch the main study line to LLM Twin using [04_LLM_TWIN_STRATEGY.md](./04_LLM_TWIN_STRATEGY.md). OpenClaw Phase 2-4 remains available as future backlog, not the current priority.
 
 ## Study Notes
 
