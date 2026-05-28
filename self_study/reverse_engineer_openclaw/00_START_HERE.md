@@ -1,107 +1,140 @@
-# 🚀 00_START_HERE: 主控台 (The Dashboard)
+# 00_START_HERE: OpenClaw-Kernel Sprint Dashboard
 
-欢迎来到 **The Engineering Sovereignty Initiative (技术主权倡议)**。
-这里是你的每日入口。请在每天开始学习和编码前，快速浏览此面板。
+## 1. 当前状态
 
-## ⚠️ 2026-05-26 战略校准 (Strategy Update)
-
-当前主线已从“完整重构 OpenClaw 四阶段”调整为：
+本项目已经从旧的“古法 OpenClaw Phase 拆解”切换为：
 
 ```text
-Backend-grounded AI Engineering
-后端工程地基 -> LLM Twin 逆向/重写 -> RAG / LLMOps -> Portfolio
+Project-Driven Vibe Coding
+  -> Sprint 01: OpenClaw-Kernel
 ```
 
-OpenClaw Python 现在的定位是 **后端工程地基训练项目**。本项目先收口到 **Phase 1 + 基础可观测性**，即 FastAPI、Pydantic、SQLAlchemy、Alembic、测试、structlog 和清晰分层。完成后，主线切换到 LLM Twin / LLM Engineers Handbook，重点训练 DDD、数据管道、RAG、评估、部署和 LLMOps。
-
-OpenClaw 原 Phase 2-4 不删除，进入暂停状态。以后如果时间充裕，尤其是求职稳定后，可以回头继续完成 AI Gateway、Agent 编排、异步总线、插件系统等内容。
-
-## 🗺️ 导航地图 (Navigation)
-
-*   🎯 **[01_OBJECTIVE.md](./01_OBJECTIVE.md)**: 【看方向】为什么要做这个项目？核心要攻克的 5 大软件工程“战区”是什么。
-*   📅 **[02_SYLLABUS.md](./02_SYLLABUS.md)**: 【看课表】1 个月的详细学习路线图，每周我们需要交付什么。
-*   🔥 **[03_TRACKING.md](./03_TRACKING.md)**: **【每日必看】** 记录本周目标、今日具体任务（To-Do）以及踩坑日记。
-*   🧭 **[04_LLM_TWIN_STRATEGY.md](./04_LLM_TWIN_STRATEGY.md)**: 【新主线】LLM Twin 逆向工程、重写学习、RAG/LLMOps 与 portfolio 宏观计划。
-
----
-
-## 🛡️ 核心执行纪律 (Execution Discipline)
-为了保证学习质量，必须遵守以下三条铁律：
-
-1.  **文字先行 (RFC First)**：在每一周任务开始前，必须先写一份简短的 RFC 文档，明确数据流图和技术选型理由。
-2.  **严禁 Print (Structured Logs)**：系统中严禁使用 `print` 调试，必须使用 Structlog 产出符合 OpenTelemetry 标准的 JSON 日志，确保系统透明化。
-3.  **契约守护 (Pydantic Guards)**：所有输入输出必须通过 Pydantic 进行严格的 Schema 校验，通过“类型体操”取代弱类型的混乱。
-
----
-
-## 🕒 每日作战节奏 (Daily Schedule)
-
-建议每天投入 4-6 小时，严格按照以下四个区块推进：
-
-### [09:00 - 10:00] 🔍 逆向解构 (Reverse Engineering)
-*   **动作**：根据当前阶段目标，精读 OpenClaw 对应的 TS/JS 源码。
-*   **产出**：不看代码，先画出逻辑时序图，理清数据在系统中的流转路径。
-
-### [10:00 - 13:00] 💻 脱稿重构 (The Blindfold Test)
-*   **动作**：关闭 OpenClaw 源码窗口，仅凭借你理解的架构思想，在 Python 环境中独立实现功能。
-*   **核心**：使用 FastAPI、Pydantic 和 SQLAlchemy 等重新构建，重点在于实现“同构映射”而非简单的代码翻译。
-
-### [13:00 - 14:00] 🛡️ 红蓝对抗与审计 (Audit & Testing)
-*   **动作**：编写单元测试，并利用 AI 扮演“红军”进行代码审计。
-*   **反馈**：将你的代码发给 AI，要求其对比工业级标准，指出在并发处理、类型安全或状态一致性上的漏洞。
-
-### [14:00 - 15:00] 📝 文档总结 (Knowledge Base)
-*   **动作**：编写或更新该模块的 RFC 文档，记录技术选型原因。
-*   **归档**：在 `03_TRACKING.md` 中记录今日攻克的工程难点。
-
----
-
-## 🤖 如何与我 (AI) 协同作战 (Interactive Protocol)
-
-不要自己闷头苦干，请每天使用以下“指令”与我交互：
-
-### 🎓 教学引领原则 (Learning Facilitation Protocol)
-
-当你每天打开 Codex，并要求我总结当天学习目标时，我必须同时给出一份“教学引领方案”，而不是只给任务清单。
-
-核心原则：
-
-1.  **你主导，我引导**：我的目标不是替你完成实现，而是帮助你掌握知识、形成判断、最终能独立搭建。
-2.  **先理解，再编码**：进入实现前，先明确今天要掌握的概念、边界、数据流与分层职责。
-3.  **模块化推进**：每天的学习应拆成若干模块，每个模块说明：
-    - 希望你掌握什么；
-    - 需要先学习什么；
-    - 如何上手练习；
-    - 最小交付物是什么。
-4.  **关键节点检查理解**：我应通过问题、草图审查、设计复盘、测试检查来确认你真的理解，而不是只看代码是否跑通。
-5.  **少代写，多引导**：除非你明确要求我实现，否则我应优先给出思路、边界、示例片段和审查反馈，让你亲自完成核心练习。
-6.  **以独立能力为 DoD**：每天的通关标准不仅包括测试是否通过，也包括你能否用自己的话解释设计取舍、分层职责与失败边界。
-
-因此，每天的启动总结应至少包含：
+旧阶段没有删除，已经封存在：
 
 ```text
-今日学习主线
-今日模块拆分
-每个模块的掌握目标
-前置学习点
-上手练习方式
-最小交付物
-我会如何检查 / 引导
-当天 Definition of Done
+archive/old_phase_plan/
 ```
 
-1.  **启动逆向** 👉 发送：`"开始今日逆向。请带我分析 [文件路径/模块名]。"` (我会带你梳理逻辑，并辅助你画出架构/时序图草稿)。
-2.  **开始编码** 👉 发送：`"进入脱稿模式。我准备实现 [具体功能]。我的思路是... 你觉得可行吗？"` (我会作为你的结对编程伙伴，帮你跑测试、查语法，并严格监督“不准用 Print”等铁律)。
-3.  **代码审计** 👉 发送：`"启动红蓝对抗。请作为红军，攻击我刚才写的代码。"` (我会模拟高并发或恶意 Payload 攻击你代码的薄弱环节)。
-4.  **每日结案** 👉 发送：`"进行每日结案 (DoD 检查)。"` (我会向你提问，确认你是否达标，最后帮你更新文档)。
+旧代码也没有删除：
 
----
+```text
+openclaw_python/
+```
 
-## ✅ 每日检验标准 (Definition of Done)
-你可以通过以下三个问题来判断今天是否“通关”（在每日结案时进行）：
+它现在是 pre-pivot backend foundation baseline，只作为参考和可复用素材，不再是当前主战场。
 
-1.  **契约是否稳固？** 构造一个非法数据，系统是否能通过 Pydantic 优雅地拦截并返回清晰的错误回执？
-2.  **逻辑是否透明？** 查阅日志，是否能通过 TraceID 完整追踪一个请求从进入 API 到执行结束的全链路状态？
-3.  **架构是否解耦？** 如果今天把数据库从 PostgreSQL 换成 SQLite，或者把 Kafka 换成 Redis，你的业务代码是否无需大改（适配器模式是否奏效）？
+当前主战场是：
 
-> 准备好了吗？请点击进入 **[03_TRACKING.md](./03_TRACKING.md)** 查看今日作战计划，然后向我发送第一条指令吧！
+```text
+sprint_01_openclaw_kernel/
+```
+
+## 2. 必读顺序
+
+新 Codex 对话必须按这个顺序阅读：
+
+1. [01_CURRENT_STRATEGY.md](./01_CURRENT_STRATEGY.md)
+2. [02_SPRINT_01_OPENCLAW_KERNEL.md](./02_SPRINT_01_OPENCLAW_KERNEL.md)
+3. [03_WEEK1_BACKEND_IMMERSION.md](./03_WEEK1_BACKEND_IMMERSION.md)
+4. [04_WEEK2_VIBE_BUILD_PLAN.md](./04_WEEK2_VIBE_BUILD_PLAN.md)
+5. [sprint_01_openclaw_kernel/PRD.md](./sprint_01_openclaw_kernel/PRD.md)
+6. [sprint_01_openclaw_kernel/SPEC.md](./sprint_01_openclaw_kernel/SPEC.md)
+7. [sprint_01_openclaw_kernel/AGENT_RULES.md](./sprint_01_openclaw_kernel/AGENT_RULES.md)
+
+补充阅读：
+
+- [sprint_01_openclaw_kernel/TODO.md](./sprint_01_openclaw_kernel/TODO.md): 当前 sprint 任务板。
+- [sprint_01_openclaw_kernel/SYSTEM_DESIGN.md](./sprint_01_openclaw_kernel/SYSTEM_DESIGN.md): 当前架构草图与待决策问题。
+- [sprint_01_openclaw_kernel/TEST_PLAN.md](./sprint_01_openclaw_kernel/TEST_PLAN.md): 后续实现必须满足的测试红线。
+- [sprint_01_openclaw_kernel/INTERVIEW_NOTES.md](./sprint_01_openclaw_kernel/INTERVIEW_NOTES.md): 面试攻击点与防守话术草稿。
+
+`SYSTEM_DESIGN.md` 中的 open questions 不需要在启动前全部回答；它们会在 Week 1 的后端体感模块中逐步收敛，并在 Week 2 实现前写回 `SPEC.md` / `SYSTEM_DESIGN.md`。
+
+## 3. 两周目标
+
+第一轮两周迭代目标：
+
+```text
+Week 1:
+  后端体感与架构内化
+  通过小实验、对照实现、攻防审讯、日志和测试建立 OpenClaw-Kernel 的系统感。
+
+Week 2:
+  Vibe Coding 构建与审计封存
+  用 SPEC 约束 AI 生成，逐步练习多 Agent 编排，产出可运行、可测试、可面试防守的 kernel 项目。
+```
+
+## 4. 当前项目边界
+
+OpenClaw-Kernel 只实现核心闭环：
+
+```text
+POST /sessions
+POST /sessions/{id}/messages
+  -> validate message
+  -> persist user message
+  -> enqueue agent job
+  -> async worker consumes job
+  -> fake LLM runner generates reply
+  -> persist assistant reply
+  -> expose job/session status
+  -> trace_id links the whole flow
+```
+
+当前重点：
+
+- FastAPI gateway。
+- Pydantic contracts。
+- route / service / repository 分层。
+- SQLAlchemy async persistence。
+- Alembic migration workflow。
+- `asyncio.Queue` event bus。
+- async dispatcher / worker。
+- retry / backoff / failure state。
+- structlog + trace_id。
+- pytest。
+- interview defense。
+
+当前不做：
+
+- 完整 OpenClaw port。
+- 完整插件生态。
+- 真实渠道接入。
+- 真实 LLM provider 集成。
+- Redis / Kafka / Celery。
+- 精致前端。
+- Auth / payment / long-tail CRUD。
+
+## 5. 旧成果如何使用
+
+旧成果仍有价值：
+
+- `openclaw_python/`: 参考 FastAPI、Pydantic、SQLAlchemy、测试等 pre-pivot 实现。
+- `openclaw/`: 原始 OpenClaw 源码，用于理解 Gateway / sessions / agents / plugin 等架构思想。
+- `archive/old_phase_plan/`: 旧路线、RFC、daily logs、学习地图和 LLM Twin 策略历史。
+- `references/`: 新方法论参考材料，只作为外部战略参考，不直接污染 sprint 代码库。
+
+使用原则：
+
+```text
+借鉴旧成果，不继承旧节奏。
+参考旧代码，不盲目复制结构。
+吸收 OpenClaw 架构思想，只重写 kernel 闭环。
+```
+
+## 6. 推荐启动指令
+
+```text
+请先阅读 00_START_HERE.md、01_CURRENT_STRATEGY.md、02_SPRINT_01_OPENCLAW_KERNEL.md 和 03_WEEK1_BACKEND_IMMERSION.md。
+然后带我启动 Sprint 01: OpenClaw-Kernel 的 Week 1 Day 1。
+今天先不写完整项目代码，只做 HTTP/Pydantic/分层边界的后端体感训练：术语、三档实现对比、攻防审讯、小实验、测试红线和口头复述。
+```
+
+## 7. 协作纪律
+
+- 先 SPEC，后代码。
+- 先数据流，后实现。
+- AI 负责高通量生成，人类负责系统主权。
+- 不以手写量证明理解，以审计、测试、日志和复述证明理解。
+- 每日必须产出一个可观察的小实验、一组测试红线、一段面试防守话术。
+- Week 2 之前，不启动完整项目实现。

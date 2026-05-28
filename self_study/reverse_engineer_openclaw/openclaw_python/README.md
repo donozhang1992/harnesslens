@@ -1,5 +1,19 @@
 # OpenClaw Python
 
+## Current Status: Legacy Baseline
+
+As of 2026-05-28, this folder is no longer the active sprint workspace.
+
+It is preserved as the pre-pivot backend foundation baseline from the earlier OpenClaw Phase 1 work. It can be used as reference material for FastAPI, Pydantic, SQLAlchemy, persistence tests, and backend layering.
+
+The active project is now:
+
+```text
+../sprint_01_openclaw_kernel
+```
+
+Do not continue the new Vibe Coding sprint directly in this folder unless the strategy changes.
+
 OpenClaw Python is a Python reimplementation of the core backend architecture inspired by the original Node/TypeScript OpenClaw project.
 
 The goal is not a line-by-line port. The project rebuilds the same backend responsibilities in a Python-native stack: API boundaries, data contracts, session/message persistence, agent orchestration, async job execution, observability, and an extensible tool/plugin layer.
