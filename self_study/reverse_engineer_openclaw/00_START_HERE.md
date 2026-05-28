@@ -29,6 +29,10 @@ openclaw_python/
 sprint_01_openclaw_kernel/
 ```
 
+注意：`sprint_01_openclaw_kernel/` 里的 `PRD.md`、`SPEC.md`、`AGENT_RULES.md`、`TEST_PLAN.md` 等文件目前只是 **draft scaffold / 教练版初稿**。它们不是最终答案，也不是要跳过的作业。
+
+Week 1 的重要目标之一，就是让学习者亲自参与修订这些文件：把每天形成的后端判断、边界约束、失败模式、测试红线和面试防守，逐步写回这些项目级事实来源文件。这本身就是 Vibe Coding 的核心训练。
+
 ## 2. 必读顺序
 
 新 Codex 对话必须按这个顺序阅读：
@@ -138,3 +142,4 @@ POST /sessions/{id}/messages
 - 不以手写量证明理解，以审计、测试、日志和复述证明理解。
 - 每日必须产出一个可观察的小实验、一组测试红线、一段面试防守话术。
 - Week 2 之前，不启动完整项目实现。
+- Sprint 文档初稿只提供起跑线；Week 1 必须持续审查、修改、收紧它们。

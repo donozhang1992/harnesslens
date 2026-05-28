@@ -1,5 +1,7 @@
 # TODO: Sprint 01 OpenClaw-Kernel
 
+> Status: Draft scaffold. This task board should be rewritten and made more precise during Week 1. The current checklist is a starting map, not a final execution plan.
+
 ## Week 1: Backend Immersion
 
 - [ ] Day 1: HTTP boundary, Pydantic contracts, route/service split.

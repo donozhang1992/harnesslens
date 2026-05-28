@@ -1,5 +1,7 @@
 # INTERVIEW_NOTES: OpenClaw-Kernel
 
+> Status: Draft scaffold. These notes are placeholders for interview defense. They should be expanded during Week 1 and finalized after Week 2 implementation and audit.
+
 ## 1. Project Pitch
 
 I built a lightweight OpenClaw-inspired AI Gateway kernel to demonstrate backend architecture for AI applications: strict message contracts, persisted conversation state, async job dispatch, resilient fake model execution, and traceable end-to-end logs.

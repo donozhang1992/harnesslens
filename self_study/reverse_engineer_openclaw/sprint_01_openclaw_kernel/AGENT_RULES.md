@@ -1,5 +1,7 @@
 # AGENT_RULES: Sprint 01
 
+> Status: Draft scaffold. These rules are a starting point for Vibe Coding control practice. Week 1 should refine them as the learner discovers how to scope agents and prevent context drift.
+
 ## 1. Operating Mode
 
 This sprint uses Project-Driven Vibe Coding.

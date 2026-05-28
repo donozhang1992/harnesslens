@@ -1,5 +1,7 @@
 # TEST_PLAN: OpenClaw-Kernel
 
+> Status: Draft scaffold. The learner should actively add, remove, and sharpen tests during Week 1. Defining the tests is part of the Vibe Coding skill being trained.
+
 ## 1. Contract Tests
 
 - valid session creation accepted;

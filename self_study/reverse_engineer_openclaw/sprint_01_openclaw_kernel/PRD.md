@@ -1,5 +1,7 @@
 # PRD: OpenClaw-Kernel
 
+> Status: Draft scaffold. This file is intentionally incomplete and should be revised during Week 1 as the learner clarifies product scope, user value, and portfolio narrative.
+
 ## 1. Problem
 
 We need a small but realistic AI Gateway kernel that demonstrates backend and architecture judgment for AI Engineer interviews.

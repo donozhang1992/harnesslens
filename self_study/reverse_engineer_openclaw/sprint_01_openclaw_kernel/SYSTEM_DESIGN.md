@@ -1,5 +1,7 @@
 # SYSTEM_DESIGN: OpenClaw-Kernel
 
+> Status: Draft scaffold. This file contains an initial architecture sketch and open questions. Week 1 should turn experiments and trade-off discussions into explicit design decisions.
+
 ## 1. Target Architecture
 
 ```text

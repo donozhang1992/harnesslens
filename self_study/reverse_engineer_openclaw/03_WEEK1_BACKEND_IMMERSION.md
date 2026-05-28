@@ -4,6 +4,10 @@
 
 Week 1 不是传统源码马拉松，也不是立刻让 AI 写完整项目。
 
+`sprint_01_openclaw_kernel/` 中已有的 `PRD.md`、`SPEC.md`、`AGENT_RULES.md`、`SYSTEM_DESIGN.md`、`TEST_PLAN.md`、`INTERVIEW_NOTES.md` 都只是 draft scaffold。它们用于防止新对话迷路，不代表设计已经完成。
+
+本周必须把这些文件当作训练对象：每天通过后端体感、小实验和攻防审讯，亲自参与更新这些文件。会写 SPEC、会约束 AI、会定义测试红线、会写面试防守，本身就是 Vibe Coding 的核心能力。
+
 本周目标是：
 
 ```text

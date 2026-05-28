@@ -1,5 +1,7 @@
 # SPEC: OpenClaw-Kernel
 
+> Status: Draft scaffold. This is not a finished specification. Week 1 should progressively tighten this file as backend boundaries, failure modes, and acceptance rules become clearer.
+
 ## 1. Hard Constraints
 
 - Use FastAPI for HTTP boundaries.

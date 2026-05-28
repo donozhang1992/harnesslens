@@ -2,6 +2,18 @@
 
 This folder is the active workspace for the first Project-Driven Vibe Coding sprint.
 
+## Draft Scaffold Notice
+
+The markdown files in this folder are initial coaching scaffolds, not final answers.
+
+Week 1 exists partly to revise them. The learner should actively participate in turning backend intuition into:
+
+- stricter SPEC rules;
+- clearer AGENT_RULES;
+- sharper TEST_PLAN redlines;
+- more precise SYSTEM_DESIGN decisions;
+- stronger INTERVIEW_NOTES defenses.
+
 The goal is to build a lightweight OpenClaw-inspired AI Gateway kernel:
 
 ```text
