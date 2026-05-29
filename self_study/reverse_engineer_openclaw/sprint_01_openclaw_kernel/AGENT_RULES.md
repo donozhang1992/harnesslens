@@ -22,6 +22,9 @@ AI may generate code, but the human owns:
 - Keep generated files small.
 - Do not let one agent modify unrelated layers.
 - Update TODO and design notes when decisions change.
+- Before implementing, read `SPEC.md` and the relevant section of `TEST_PLAN.md`.
+- If a behavior is not covered by `SPEC.md`, update the specification before implementing it.
+- If implementation reveals a new test redline, update `TEST_PLAN.md`.
 
 ## 3. Required Review Questions
 
@@ -63,6 +66,13 @@ Do not add:
 - Redis/Kafka/Celery;
 - plugin marketplace;
 - broad refactors unrelated to the current module.
+
+Do not place:
+
+- database access inside route handlers;
+- SQLAlchemy ORM models inside response contracts;
+- raw unvalidated dictionaries across service boundaries;
+- concrete queue implementation details inside business services.
 
 ## 6. Acceptance Standard
 

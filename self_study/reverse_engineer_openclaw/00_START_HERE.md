@@ -143,3 +143,58 @@ POST /sessions/{id}/messages
 - 每日必须产出一个可观察的小实验、一组测试红线、一段面试防守话术。
 - Week 2 之前，不启动完整项目实现。
 - Sprint 文档初稿只提供起跑线；Week 1 必须持续审查、修改、收紧它们。
+
+## 8. Sprint File Protocol
+
+这些文件不是业界强制标准，而是本 sprint 的 Vibe Coding 操作协议。文件类型来自常见工程实践，协作方式由本项目自定义。
+
+使用原则：
+
+```text
+00_START_HERE.md
+  给人类学习者和教练型 agent 读。
+  负责启动上下文、学习节奏、文件地图和协作纪律。
+
+sprint_01_openclaw_kernel/PRD.md
+  定义为什么做、给谁看、成功标准是什么。
+  用于防止 scope drift。
+
+sprint_01_openclaw_kernel/SPEC.md
+  Week 2 Vibe Coding 的最高技术约束。
+  Orchestrator 和 implementer 必须先读它；代码验收也必须对照它。
+
+sprint_01_openclaw_kernel/AGENT_RULES.md
+  规定 AI agents 如何工作、如何避免上下文漂移、哪些行为禁止。
+
+sprint_01_openclaw_kernel/SYSTEM_DESIGN.md
+  记录数据流、状态流、架构判断、trade-off 和 open questions。
+
+sprint_01_openclaw_kernel/TEST_PLAN.md
+  记录必须满足的测试红线。
+  QA/Auditor 使用它验收；Implementer 也必须用它反向约束实现。
+
+sprint_01_openclaw_kernel/INTERVIEW_NOTES.md
+  把架构判断转化为面试攻防话术。
+
+sprint_01_openclaw_kernel/TODO.md
+  当前任务板。
+  只记录下一步动作，不承载架构真理。
+```
+
+Week 2 实现前，Vibe Coding agent 必须按这个顺序读取：
+
+1. `00_START_HERE.md`
+2. `sprint_01_openclaw_kernel/AGENT_RULES.md`
+3. `sprint_01_openclaw_kernel/SPEC.md`
+4. `sprint_01_openclaw_kernel/SYSTEM_DESIGN.md`
+5. `sprint_01_openclaw_kernel/TEST_PLAN.md`
+6. `sprint_01_openclaw_kernel/TODO.md`
+
+修改规则：
+
+- 新的技术硬约束写入 `SPEC.md`。
+- 新的架构判断或 trade-off 写入 `SYSTEM_DESIGN.md`。
+- 新的测试红线写入 `TEST_PLAN.md`。
+- 新的 agent 协作规则写入 `AGENT_RULES.md`。
+- 新的面试防守点写入 `INTERVIEW_NOTES.md`。
+- 只是下一步动作时，写入 `TODO.md`。

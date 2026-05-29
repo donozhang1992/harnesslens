@@ -6,8 +6,9 @@
 
 - valid session creation accepted;
 - invalid UUID rejected;
-- invalid message role rejected;
+- client message role other than `user` rejected with validation error;
 - empty message content rejected;
+- request schemas and response schemas are separate where their allowed fields differ;
 - response schemas do not leak ORM internals.
 
 ## 2. Persistence Tests
@@ -22,7 +23,10 @@
 
 - `POST /sessions` returns expected response;
 - `POST /sessions/{id}/messages` creates message and job;
-- missing session returns not found;
+- `POST /sessions/{id}/messages` returns `202 Accepted` on successful async submission;
+- successful message submission response includes `job_id`, `message_id`, and status fields defined by the response schema;
+- missing session returns not found and does not persist a message or job;
+- route handler can be exercised with a fake message service and without initializing a real database;
 - `GET /jobs/{id}` returns status;
 - invalid payload returns validation error.
 

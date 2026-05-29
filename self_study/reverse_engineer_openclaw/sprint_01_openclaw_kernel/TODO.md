@@ -4,7 +4,7 @@
 
 ## Week 1: Backend Immersion
 
-- [ ] Day 1: HTTP boundary, Pydantic contracts, route/service split.
+- [x] Day 1: HTTP boundary, Pydantic contracts, route/service split.
 - [ ] Day 2: repository, SQLAlchemy async, transaction, Alembic.
 - [ ] Day 3: `asyncio.Queue`, dispatcher, worker, backpressure.
 - [ ] Day 4: retry, backoff, failure state, graceful shutdown.
@@ -20,4 +20,4 @@
 
 ## Current Next Step
 
-Start Week 1 Day 1. Do not build the complete app yet.
+Start Week 1 Day 2: repository, SQLAlchemy async, transaction, and Alembic. Do not build the complete app yet.
