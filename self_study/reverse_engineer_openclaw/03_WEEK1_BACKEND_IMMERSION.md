@@ -1,287 +1,182 @@
-# 03_WEEK1_BACKEND_IMMERSION: OpenClaw-Kernel 后端体感周
+# 03_WEEK1_BACKEND_IMMERSION: Backend And AI Gateway Immersion Week
 
-## 1. 本周定位
+## 1. Week Positioning
 
-Week 1 不是传统源码马拉松，也不是立刻让 AI 写完整项目。
+Week 1 is the design, intuition, and experiment week for Sprint 01.
 
-`sprint_01_openclaw_kernel/` 中已有的 `PRD.md`、`SPEC.md`、`AGENT_RULES.md`、`SYSTEM_DESIGN.md`、`TEST_PLAN.md`、`INTERVIEW_NOTES.md` 都只是 draft scaffold。它们用于防止新对话迷路，不代表设计已经完成。
+Do not build the full app yet. The goal is to understand the system deeply enough that Week 2 Vibe Coding can be constrained by clear SPEC, tests, and interview-ready trade-offs.
 
-本周必须把这些文件当作训练对象：每天通过后端体感、小实验和攻防审讯，亲自参与更新这些文件。会写 SPEC、会约束 AI、会定义测试红线、会写面试防守，本身就是 Vibe Coding 的核心能力。
+The markdown files inside `sprint_01_openclaw_kernel/` are draft scaffolds, not finished answers. During Week 1, the learner must actively revise:
 
-本周目标是：
+- `PRD.md`
+- `SPEC.md`
+- `SYSTEM_DESIGN.md`
+- `TEST_PLAN.md`
+- `AGENT_RULES.md`
+- `INTERVIEW_NOTES.md`
+- `TODO.md`
 
-```text
-用新世代方法建立后端与架构体感，
-为 Week 2 的 Vibe Coding 构建 OpenClaw-Kernel 准备 SPEC、边界、测试红线和面试防守材料。
-```
+Writing these files is part of Vibe Coding skill. A strong AI engineer does not merely ask AI to code; they define contracts, acceptance criteria, failure modes, and review boundaries.
 
-核心问题不是“我手写了多少代码”，而是：
+## 2. Week 1 Method
 
-- 我是否知道每一层为什么存在？
-- 我是否能画出数据生命周期？
-- 我是否看见了异步队列、事务、重试、日志的真实摩擦力？
-- 我是否能审计 AI 生成的后端代码？
-- 我是否能解释当前 MVP 的取舍？
-
-## 2. 为什么这比古法更好
-
-古法学习：
-
-```text
-读文档
-  -> 手写 demo
-  -> 跑通
-  -> 以为掌握
-```
-
-问题是：跑通通常只证明 happy path 存在，不能证明你理解了系统。
-
-本周方法：
-
-```text
-商业痛点
-  -> 术语说明
-  -> 三档实现对比
-  -> 攻防审讯
-  -> 小实验观测
-  -> 测试和日志证明
-  -> 人类复述
-```
-
-它更好的原因是：
-
-- 直接面向真实工程问题，而不是语法问题。
-- 通过 naive / acceptable / production-minded 对比建立工程审美。
-- 通过失败注入和极端 case 获得真实体感。
-- 通过 structlog / trace_id 看见数据流，而不是凭想象理解。
-- 通过测试断言和面试复述，把知识固化为可防守经验。
-
-## 3. 通用执行节奏
-
-每个模块都按同一个节奏推进：
+Each module follows the same rhythm:
 
 ```text
 1. Business pain
-   这个后端概念替系统挡了什么子弹？
-
 2. Vocabulary bootstrapping
-   必须知道哪些术语？它们在系统里扮演什么角色？
-
-3. Comparative implementation
-   让 AI 生成三档实现：naive / acceptable / production-minded。
-
+3. Three implementation levels: naive / acceptable / production-minded
 4. Attack review
-   追问高并发、网络失败、数据不一致、协程取消、系统重启时哪里会坏。
-
-5. Observable experiment
-   写一个极小实验，通过日志、延迟、状态变化看见系统行为。
-
+5. Observable mini experiment
 6. Test assertion
-   用 pytest 或伪测试定义必须成立的不变量。
-
-7. Human explanation
-   学习者用自己的话复述数据生命周期、失败模式和 trade-off。
+7. SPEC/TEST_PLAN update
+8. Human interview explanation
 ```
 
-每个模块的完成标准都必须包含：
+Every day must produce:
 
-- 一个可解释的数据流。
-- 一个可观测的小实验。
-- 至少 2 个失败模式。
-- 至少 1 个测试断言。
-- 一段面试防守话术草稿。
+- one observable mini experiment;
+- one architecture or trade-off note in `SYSTEM_DESIGN.md`;
+- one technical constraint in `SPEC.md`;
+- one acceptance redline in `TEST_PLAN.md`;
+- one interview defense note.
 
-## 4. 模块一：HTTP 边界与 Pydantic 契约
+## 3. Day 1: HTTP Boundary And Pydantic Contracts
 
-### 掌握目标
-
-理解：
+Goal:
 
 ```text
-Client request
-  -> FastAPI route
-  -> Pydantic schema
-  -> service use case
-  -> response schema
+Understand the external boundary of the gateway.
 ```
 
-关键问题：
+Core questions:
 
-- 为什么 route 是协议翻译层，不是业务层？
-- 为什么 Pydantic 是系统边界的门禁？
-- 为什么 request model 和 response model 要分开？
-- 为什么裸 dict 传递会污染系统？
-- 为什么 422 validation error 是好事？
+- Why is a route a protocol adapter, not the business layer?
+- Why is Pydantic the system boundary guard?
+- Why separate request schema from response schema?
+- Why should raw dictionaries not cross service boundaries?
+- Which errors are validation errors, not business errors?
 
-### 小实验
+Mini experiment:
 
-让 AI 生成三种 `POST /sessions/{id}/messages` 写法：
+Ask AI to generate three versions of `POST /sessions/{id}/messages`:
 
 ```text
-1. naive:
-   所有逻辑堆在 route 里，直接操作 dict。
+naive:
+  route owns everything and passes raw dicts
 
-2. acceptable:
-   route 使用 Pydantic schema，调用 service。
+acceptable:
+  route uses schemas and calls a service
 
-3. production-minded:
-   route / schema / service / repository 边界清晰，错误映射明确。
+production-minded:
+  route/schema/service/repository boundaries are clear
 ```
 
-观察点：
+Observe:
 
-- 非法 role 如何被拦截？
-- 空 content 在哪里失败？
-- route 是否知道数据库细节？
-- 业务错误如何映射到 HTTP 404 / 409 / 422？
+- illegal role rejected;
+- empty content rejected;
+- route does not know SQLAlchemy;
+- service owns session existence and message submission decisions.
 
-### 审核标准
+Outputs:
 
-- 能解释 route、schema、service 的职责边界。
-- 能设计非法 payload 并预测返回状态码。
-- 能指出 naive 版本未来为什么难测、难改、难防守。
+- update `SPEC.md` contract rules;
+- update `TEST_PLAN.md` contract tests;
+- add interview defense for route/service separation.
 
-## 5. 模块二：Service / Repository / Model 分层
+## 4. Day 2: Persistence, Transactions, Alembic, Token Usage Shape
 
-### 掌握目标
-
-理解：
+Goal:
 
 ```text
-route = 协议翻译
-service = 用例决策
-repository = 存储边界
-schema = 外部契约
-model = 数据库形状
+Understand durable state and transaction boundaries.
 ```
 
-关键问题：
+Core questions:
 
-- `Message cannot exist without Session` 属于哪一层的规则？
-- session 不存在时，谁负责发现？谁负责映射 HTTP 404？
-- repository 应该返回 ORM model、dict，还是 domain/schema object？
-- 为什么 API schema 和 SQLAlchemy model 不能混用？
+- What is the difference between engine, session, transaction, model, and migration?
+- Why is `AsyncSession` a unit of work?
+- Why is `Base.metadata.create_all()` not a migration workflow?
+- Which data must be persisted for interview/debug value?
+- Where should token usage and cost estimates live?
 
-### 小实验
+Minimum data concepts:
 
-让 AI 生成一个故意有问题的版本：
+- Session
+- Message
+- Job
+- TokenUsage
+
+Mini experiment:
+
+Compare three persistence patterns:
 
 ```text
-route 直接 query database
-route 直接 commit
-route 直接拼 response dict
+no transaction:
+  failure leaves partial writes
+
+scattered commit:
+  service and repository commit unpredictably
+
+unit of work:
+  one transaction protects message/job creation
 ```
 
-然后要求 AI 作为 reviewer 攻击它：
-
-- 如果换数据库，要改哪里？
-- 如果要测试业务规则，要怎么 mock？
-- 如果事务失败，route 会不会变成业务垃圾场？
-
-### 审核标准
-
-- 能画出 route -> service -> repository -> model 的调用图。
-- 能解释业务规则与 HTTP 状态码的边界。
-- 能指出至少 3 个分层泄漏信号。
-
-## 6. 模块三：持久化、事务与 Alembic
-
-### 掌握目标
-
-理解：
+Failure case:
 
 ```text
-AsyncEngine
-  -> AsyncSession
-  -> transaction
-  -> SQLAlchemy model
-  -> SQLite table
-  -> Alembic migration
+user message created
+job creation fails
 ```
 
-关键问题：
+Observe:
 
-- engine 和 session 有什么区别？
-- session 为什么是 unit of work？
-- commit / rollback 的责任在哪里？
-- `Base.metadata.create_all()` 为什么不能作为正式迁移工作流？
-- Alembic 记录的到底是什么？
+- which rows remain;
+- whether rollback protects consistency;
+- whether logs identify the failure point.
 
-### 小实验
+Outputs:
 
-让 AI 生成三种持久化实现：
+- update `SYSTEM_DESIGN.md` with transaction ownership;
+- update `SPEC.md` with TokenUsage fields;
+- update `TEST_PLAN.md` with rollback and migration tests.
+
+## 5. Day 3: `asyncio.Queue`, Worker Lifecycle, And Queue vs SSE
+
+Goal:
 
 ```text
-1. no-transaction:
-   中途失败可能留下半条数据。
-
-2. scattered-commit:
-   service 和 repository 到处 commit。
-
-3. unit-of-work:
-   明确事务边界，失败 rollback。
+Understand background work separately from streaming transport.
 ```
 
-再设计一个失败场景：
+Core distinction:
 
 ```text
-创建 user message 成功，
-创建 assistant reply 前抛错。
+asyncio.Queue
+  -> background job dispatch and worker buffering
+
+SSE
+  -> HTTP response streaming from server to browser
 ```
 
-观察：
+Core questions:
 
-- 数据库留下了什么？
-- 是否出现半完成状态？
-- 日志能不能解释失败点？
+- What are producer, consumer, maxsize, backpressure, cancellation, and graceful shutdown?
+- What is the difference between at-most-once and at-least-once?
+- Why is an in-memory queue acceptable for Sprint 01 but not production?
+- When should Redis Streams, SQS, Celery, Kafka, or RabbitMQ replace it?
+- Should the streaming path and background job path both exist in Sprint 01?
 
-### 审核标准
-
-- 能解释 AsyncSession 生命周期。
-- 能解释迁移和临时建表的区别。
-- 能说清失败时数据一致性如何保护。
-
-## 7. 模块四：`asyncio.Queue` 与任务分发网络
-
-### 掌握目标
-
-理解 OpenClaw-Kernel 的异步核心：
-
-```text
-HTTP request
-  -> validate payload
-  -> persist user message
-  -> enqueue agent job
-  -> return job/session status
-  -> worker consumes job
-  -> fake LLM runner processes
-  -> persist assistant reply
-  -> update job status
-```
-
-关键术语：
-
-- producer / consumer。
-- queue maxsize。
-- backpressure。
-- task status。
-- cancellation。
-- graceful shutdown。
-- at-most-once / at-least-once。
-- in-memory queue limitation。
-- future replacement: Redis Streams / Celery / Kafka。
-
-### 小实验
-
-构造一个最小异步队列实验：
+Mini experiment:
 
 ```text
 queue maxsize = 2
-worker 每秒处理 1 个 job
-同时提交 10 个 job
+worker handles 1 job/second
+submit 10 jobs concurrently
 ```
 
-必须打出结构化日志：
+Required structured events:
 
 ```text
 job_enqueued
@@ -292,181 +187,156 @@ job_completed
 job_failed
 ```
 
-观察：
+Observe:
 
-- 第 3 个之后的请求如何表现？
-- `await queue.put()` 会等待还是直接失败？
-- 如果 worker 挂了，队列里发生什么？
-- 如果服务重启，内存 job 会不会丢？
+- how backpressure appears;
+- what happens when worker is stopped;
+- what is lost on process restart;
+- how job state remains queryable in DB.
 
-### 审核标准
+Outputs:
 
-- 能解释 queue 是缓冲，不是数据库。
-- 能解释 backpressure 为什么是系统保护机制。
-- 能说明为什么第一轮用 `asyncio.Queue`，未来何时替换 Redis / Kafka。
-- 能从日志复述一个 job 的生命周期。
+- update `SYSTEM_DESIGN.md` with queue vs SSE boundary;
+- update `SPEC.md` with `QueueBackend` rules;
+- update `TEST_PLAN.md` with queue behavior tests;
+- add interview defense for `asyncio.Queue`.
 
-## 8. 模块五：自愈、重试与失败状态
+## 6. Day 4: Provider Adapter, AWS Bedrock, Timeout, Rate-Limit Retry
 
-### 掌握目标
-
-理解：
+Goal:
 
 ```text
-external call may fail
-worker should classify failure
-transient errors may retry
-permanent errors should fail fast
-retry needs backoff + jitter
-final failure must be persisted and observable
+Understand native LLM gateway integration without becoming provider-dependent.
 ```
 
-关键问题：
+Basket choice:
 
-- 429 要不要重试？
-- 400 要不要重试？
-- retry 会不会放大雪崩？
-- 最大重试次数在哪里定义？
-- retry attempt 如何进入日志？
-- job 最终失败后，用户如何查询状态？
+- Cloud representative: AWS Bedrock.
+- Other providers: know the comparison surface; do not implement all of them.
+- Test representative: fake provider with deterministic success/failure/streaming.
 
-### 小实验
+Core questions:
 
-构造 fake LLM client：
+- What interface should all providers satisfy?
+- How does a streaming provider differ from a non-streaming provider?
+- Which errors are transient and retryable?
+- Which errors should fail fast?
+- How do timeout and retry interact with user experience?
+- How do we test provider behavior without spending tokens?
+
+Minimum provider interface should account for:
+
+- prompt/messages input;
+- model name;
+- stream vs non-stream mode;
+- timeout;
+- token usage or estimated token usage;
+- provider error classification;
+- trace_id propagation.
+
+Mini experiment:
+
+Create or specify a fake provider with:
 
 ```text
 30% success
-40% transient error
-30% permanent error
+40% transient/rate-limit style error
+30% permanent validation/provider error
 ```
 
-让 worker 处理 20 个 job。
-
-必须观测：
-
-- 每个 job 尝试了几次。
-- 哪些错误重试了。
-- 哪些错误 fail fast。
-- 最终状态是 `completed` 还是 `failed`。
-- trace_id 是否贯穿所有 retry attempt。
-
-### 审核标准
-
-- 能区分 transient vs permanent failure。
-- 能解释 exponential backoff + jitter 的意义。
-- 能说明为什么无限重试是灾难。
-- 能设计 job status schema。
-
-## 9. 模块六：可观测性与面试防守
-
-### 掌握目标
-
-理解：
+Then define retry behavior:
 
 ```text
-trace_id
-session_id
-job_id
-structured logs
-state transition
-failure diagnosis
-interview defense
+transient: bounded retry with backoff
+permanent: fail fast
+timeout: bounded failure and visible error state
 ```
 
-关键问题：
+AWS Bedrock experiment:
 
-- 为什么 `print()` 不够？
-- 什么日志字段必须全链路携带？
-- 如何只看日志复盘一次请求？
-- 系统卡住时，如何判断是 route、queue、worker、LLM runner 还是 DB 的问题？
-- MVP 使用内存队列时，面试官会攻击什么？
+- define setup prerequisites;
+- identify model choice;
+- run a tiny call if credentials are available;
+- otherwise document exact adapter contract and setup command path.
 
-### 小实验
+Outputs:
 
-跑一条完整链路：
+- update `SPEC.md` provider adapter rules;
+- update `TEST_PLAN.md` retry/provider tests;
+- update `SYSTEM_DESIGN.md` provider trade-offs;
+- add interview defense for Bedrock as the representative cloud basket.
+
+## 7. Day 5: SSE, Token Economics, Observability, SPEC Freeze
+
+Goal:
 
 ```text
-POST /sessions
-POST /sessions/{id}/messages
-worker processes job
-assistant reply persisted
-GET /sessions/{id}/messages
+Freeze the Week 2 build contract.
 ```
 
-只看结构化日志，不看代码，复述：
+Core questions:
 
-- 请求从哪里进入。
-- 生成了哪个 trace_id。
-- 生成了哪个 job_id。
-- 何时入队。
-- 何时出队。
-- worker 做了什么。
-- reply 何时落库。
-- 如果失败，失败原因在哪个 span / event。
+- How does SSE work over HTTP?
+- What is Time To First Token (TTFT)?
+- What is total latency?
+- How do input tokens, output tokens, and cost differ?
+- Which log fields are required to debug a failed streamed request?
+- What must the frontend show to make the demo interview-ready?
 
-### 审核标准
+Mini experiment:
 
-- 能定义最小日志字段集。
-- 能解释 trace_id 与 job_id 的区别。
-- 能写出一段面试防守话术：
+Build or specify a tiny SSE endpoint:
 
 ```text
-当前 MVP 使用 asyncio.Queue 是为了快速验证异步 Gateway 核心闭环。
-我知道它的限制：进程重启会丢内存任务，无法跨进程扩展。
-因此我通过 QueueBackend 接口隔离底层实现。
-未来可以替换 Redis Streams / Celery / Kafka，而不修改业务 service。
+GET or POST streaming endpoint
+  -> emits token chunks
+  -> emits final metadata event
+  -> includes trace_id
+  -> records TTFT / latency / token estimate
 ```
 
-## 10. Week 1 建议节奏
+Required observable fields:
 
-```text
-Day 1:
-  HTTP boundary / Pydantic / route-service split
+- trace_id;
+- session_id;
+- message_id;
+- job_id when applicable;
+- provider;
+- model;
+- prompt_tokens;
+- completion_tokens;
+- estimated_cost;
+- ttft_ms;
+- latency_ms;
+- error_type when applicable.
 
-Day 2:
-  repository / SQLAlchemy / transaction / Alembic
+Outputs:
 
-Day 3:
-  asyncio.Queue / dispatcher / worker / backpressure
+- freeze `SPEC.md`;
+- finalize `TEST_PLAN.md`;
+- update `TODO.md` for Week 2;
+- update `INTERVIEW_NOTES.md` with:
+  - ADLC answer;
+  - SSE explanation;
+  - token cost explanation;
+  - provider choice explanation;
+  - retry/debug story.
 
-Day 4:
-  retry / backoff / failure status / graceful shutdown
+## 8. Week 1 Acceptance
 
-Day 5:
-  observability / trace_id / test strategy / final SPEC
-```
+Week 1 is complete when the learner can explain:
 
-每天结束必须产出：
+- the full gateway data lifecycle;
+- route/service/repository ownership;
+- transaction and migration boundaries;
+- queue vs SSE difference;
+- why Sprint 01 uses `asyncio.Queue`;
+- how provider adapters prevent lock-in;
+- why AWS Bedrock is a good representative provider for this learner;
+- timeout and rate-limit retry rules;
+- input/output token cost estimation;
+- trace_id-based debugging;
+- what the Next.js console must show in Week 2.
 
-- 一张数据流或状态流图。
-- 一个小实验观察记录。
-- 一组测试红线。
-- 一段口头复述。
-- 一个进入 Week 2 SPEC 的约束。
+Week 1 is not accepted if the documents remain generic. The documents must contain decisions specific enough for Week 2 agents to implement without reinventing scope.
 
-## 11. Week 1 总体验收
-
-Week 1 结束时，不以代码量验收，而以控制力验收。
-
-必须能回答：
-
-- OpenClaw-Kernel 的最小闭环是什么？
-- 哪些层属于 HTTP，哪些属于业务，哪些属于持久化，哪些属于任务调度？
-- 一条 message 从 HTTP 到 assistant reply 的完整生命周期是什么？
-- `asyncio.Queue` 的限制是什么？为什么第一轮仍然用它？
-- 事务失败时如何避免半完成状态？
-- 哪些错误该重试，哪些不该？
-- 如何通过 trace_id 排查一个失败 job？
-- 面试官问“为什么不用 Redis/Kafka/Celery”时怎么防守？
-
-最终交付物：
-
-```text
-PROJECT_SPEC.md draft
-SYSTEM_DESIGN.md draft
-TEST_PLAN.md draft
-AGENT_RULES.md draft
-Week 2 implementation TODO
-```
-
-这些文件后续可以继续调整。本文件先作为第一轮后端体感训练的临时指导方针。

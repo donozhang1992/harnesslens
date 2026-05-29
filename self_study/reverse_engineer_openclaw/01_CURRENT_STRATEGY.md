@@ -115,9 +115,37 @@ Therefore Sprint 01 builds:
 OpenClaw-Kernel
 ```
 
-A lightweight AI Gateway kernel that implements only the minimal observable async message-processing loop.
+A minimum full-stack AI Gateway kernel. It keeps the OpenClaw-inspired backend pressure, but the Sprint 01 target is now broader than the first draft:
 
-## 7. What Happened To LLM Twin
+- FastAPI + Pydantic backend;
+- persistence and migrations;
+- SSE streaming;
+- provider adapter / AWS Bedrock experiment;
+- timeout and rate-limit retry;
+- token usage and cost estimation;
+- `asyncio.Queue` background path;
+- minimal Next.js gateway console;
+- ADLC-driven Vibe Coding discipline.
+
+The implementation should be small, but it must be demoable and interview-defensible.
+
+## 7. Basket Principle
+
+The new sprint plan uses a basket strategy.
+
+We do not need to master every named technology in every category during Sprint 01. Each category needs one representative technology with real depth, plus enough comparison knowledge to explain alternatives.
+
+Current representatives:
+
+- backend: FastAPI + Pydantic;
+- frontend: Next.js 15 + React + TypeScript + Tailwind + shadcn/ui;
+- cloud/provider: AWS Bedrock;
+- streaming: SSE;
+- queueing: `asyncio.Queue`;
+- cost: token accounting and cost estimation;
+- AI workflow: ADLC.
+
+## 8. What Happened To LLM Twin
 
 LLM Twin / LLM Engineers Handbook is no longer the immediate heavy rebuild target.
 
@@ -130,9 +158,9 @@ It remains a reference and later portfolio direction for:
 - LLMOps;
 - deployment.
 
-The first sprint focuses on OpenClaw-Kernel because it is better suited for learning backend architecture, async dispatch, Vibe Coding control, and system defense.
+The first sprint focuses on OpenClaw-Kernel because it is better suited for learning backend architecture, streaming gateway design, provider integration, async dispatch, Vibe Coding control, and system defense.
 
-## 8. Current Source Of Truth
+## 9. Current Source Of Truth
 
 For current execution, trust:
 

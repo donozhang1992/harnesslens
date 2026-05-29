@@ -1,51 +1,61 @@
 # PRD: OpenClaw-Kernel
 
-> Status: Draft scaffold. This file is intentionally incomplete and should be revised during Week 1 as the learner clarifies product scope, user value, and portfolio narrative.
+> Status: Sprint 01 working draft. Week 1 should keep tightening this file as scope and success criteria become clearer.
 
 ## 1. Problem
 
-We need a small but realistic AI Gateway kernel that demonstrates backend and architecture judgment for AI Engineer interviews.
+We need a small but realistic full-stack AI Gateway project that demonstrates AI Engineer readiness.
 
-The system should accept user messages, persist conversation state, dispatch an async agent job, run a fake model worker, persist the assistant reply, and expose observable job/session state.
+The system should let a user submit a message through a minimal web console, validate and persist the request, stream or process a model-style response, estimate token cost, expose traceable logs, and demonstrate deterministic AI-assisted development discipline.
 
 ## 2. Users
 
 Primary user:
 
-- the developer building portfolio evidence and interview stories.
+- the learner building portfolio evidence and interview stories.
 
-Secondary user:
+Secondary users:
 
-- a reviewer or interviewer evaluating backend architecture, async dispatch, and observability decisions.
+- a reviewer evaluating backend architecture;
+- an interviewer probing AI Gateway, streaming, provider integration, and AI coding workflow;
+- a future Codex/agent session continuing the sprint without prior conversation context.
 
 ## 3. Core Use Case
 
 ```text
-Client creates a session.
-Client submits a user message.
-System validates and persists the message.
-System enqueues an agent job.
-Worker processes the job asynchronously.
-System persists an assistant reply.
-Client can inspect messages and job status.
-Logs expose the entire lifecycle through trace_id.
+User opens the Next.js gateway console.
+User submits a message.
+FastAPI validates the request with Pydantic.
+The backend persists session/message/job/token metadata.
+The gateway calls a provider adapter or fake provider.
+The assistant response streams back through SSE.
+The UI displays response text, trace_id, token/cost estimate, and status.
+Structured logs allow lifecycle reconstruction.
 ```
 
 ## 4. Success Criteria
 
-- A complete message-to-reply lifecycle works locally.
-- Invalid inputs are rejected at the boundary.
+- A local full-stack demo path works.
+- Invalid inputs fail at the boundary.
 - Persistence is migration-backed.
-- Async dispatch is visible and testable.
-- Failure states are explicit.
-- Logs support trace-based debugging.
-- The implementation can be defended in a system design interview.
+- SSE streaming works in the frontend.
+- Provider access is isolated behind an adapter.
+- AWS Bedrock is tested or documented as the representative cloud-provider experiment.
+- Timeout and retry behavior is bounded and testable.
+- Token usage and estimated cost are visible.
+- `trace_id` connects browser/backend/provider or worker lifecycle.
+- Tests cover the critical boundaries.
+- The implementation can be defended in a system design or AI coding workflow interview.
 
 ## 5. Non-Goals
 
 - Full OpenClaw port.
 - Real plugin system.
-- Real LLM provider.
-- Redis/Kafka/Celery in Sprint 01.
-- UI polish.
-- Auth and user management.
+- Real chat-channel integrations.
+- Redis/Kafka/Celery production queue.
+- LangGraph or multi-agent runtime.
+- RAG.
+- Full auth or user-management.
+- Polished frontend product design.
+- Kubernetes/cloud deployment.
+

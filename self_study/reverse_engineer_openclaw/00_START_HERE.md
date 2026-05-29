@@ -1,41 +1,59 @@
 # 00_START_HERE: OpenClaw-Kernel Sprint Dashboard
 
-## 1. 当前状态
+## 1. Current State
 
-本项目已经从旧的“古法 OpenClaw Phase 拆解”切换为：
+This repo has pivoted from old-style OpenClaw source-code dissection into:
 
 ```text
 Project-Driven Vibe Coding
   -> Sprint 01: OpenClaw-Kernel
+  -> A full-stack AI Gateway kernel for Australian AIE interview readiness
 ```
 
-旧阶段没有删除，已经封存在：
+The current goal is not to finish a full OpenClaw port. The goal is to build one small, defensible, interview-ready AI Gateway that proves:
+
+- backend architecture judgment;
+- full-stack AI product delivery;
+- native LLM gateway integration;
+- streaming, retry, timeout, and token-cost awareness;
+- deterministic AI-assisted development discipline.
+
+Old materials remain available but are no longer the execution path:
 
 ```text
-archive/old_phase_plan/
+archive/old_phase_plan/     historical old-phase plan
+openclaw_python/            pre-pivot backend baseline reference
+openclaw/                   original OpenClaw source reference
+references/                 methodology references
 ```
 
-旧代码也没有删除：
-
-```text
-openclaw_python/
-```
-
-它现在是 pre-pivot backend foundation baseline，只作为参考和可复用素材，不再是当前主战场。
-
-当前主战场是：
+The active workspace is:
 
 ```text
 sprint_01_openclaw_kernel/
 ```
 
-注意：`sprint_01_openclaw_kernel/` 里的 `PRD.md`、`SPEC.md`、`AGENT_RULES.md`、`TEST_PLAN.md` 等文件目前只是 **draft scaffold / 教练版初稿**。它们不是最终答案，也不是要跳过的作业。
+## 2. Basket Principle
 
-Week 1 的重要目标之一，就是让学习者亲自参与修订这些文件：把每天形成的后端判断、边界约束、失败模式、测试红线和面试防守，逐步写回这些项目级事实来源文件。这本身就是 Vibe Coding 的核心训练。
+Sprint 01 does not require mastering every named tool in every category.
 
-## 2. 必读顺序
+Each category is a basket. The learner should gain working depth in one representative technology and enough comparison knowledge to explain the alternatives.
 
-新 Codex 对话必须按这个顺序阅读：
+Current Sprint 01 choices:
+
+- Backend basket: **FastAPI + Pydantic**.
+- Frontend basket: **Next.js 15 + React + TypeScript + Tailwind + shadcn/ui**.
+- Cloud/provider basket: **AWS Bedrock** as the cloud-native experiment because the learner already has strong AWS background.
+- Model/API basket: one real provider path must work; other providers can be adapter slots, mocks, or comparison notes.
+- Streaming basket: **SSE** as the main streaming protocol.
+- Cost basket: **tiktoken-style token accounting** and explicit cost estimation.
+- AI coding basket: **ADLC: Ask -> Explore -> Plan -> Code -> Verify**.
+
+Do not expand Sprint 01 into a provider zoo. Depth beats coverage.
+
+## 3. Required Read Order
+
+A new Codex conversation must read these files in order:
 
 1. [01_CURRENT_STRATEGY.md](./01_CURRENT_STRATEGY.md)
 2. [02_SPRINT_01_OPENCLAW_KERNEL.md](./02_SPRINT_01_OPENCLAW_KERNEL.md)
@@ -45,156 +63,113 @@ Week 1 的重要目标之一，就是让学习者亲自参与修订这些文件�
 6. [sprint_01_openclaw_kernel/SPEC.md](./sprint_01_openclaw_kernel/SPEC.md)
 7. [sprint_01_openclaw_kernel/AGENT_RULES.md](./sprint_01_openclaw_kernel/AGENT_RULES.md)
 
-补充阅读：
+Supplementary files:
 
-- [sprint_01_openclaw_kernel/TODO.md](./sprint_01_openclaw_kernel/TODO.md): 当前 sprint 任务板。
-- [sprint_01_openclaw_kernel/SYSTEM_DESIGN.md](./sprint_01_openclaw_kernel/SYSTEM_DESIGN.md): 当前架构草图与待决策问题。
-- [sprint_01_openclaw_kernel/TEST_PLAN.md](./sprint_01_openclaw_kernel/TEST_PLAN.md): 后续实现必须满足的测试红线。
-- [sprint_01_openclaw_kernel/INTERVIEW_NOTES.md](./sprint_01_openclaw_kernel/INTERVIEW_NOTES.md): 面试攻击点与防守话术草稿。
+- [sprint_01_openclaw_kernel/TODO.md](./sprint_01_openclaw_kernel/TODO.md): day-by-day task board.
+- [sprint_01_openclaw_kernel/SYSTEM_DESIGN.md](./sprint_01_openclaw_kernel/SYSTEM_DESIGN.md): architecture decisions and trade-offs.
+- [sprint_01_openclaw_kernel/TEST_PLAN.md](./sprint_01_openclaw_kernel/TEST_PLAN.md): acceptance redlines.
+- [sprint_01_openclaw_kernel/INTERVIEW_NOTES.md](./sprint_01_openclaw_kernel/INTERVIEW_NOTES.md): interview defense material.
 
-`SYSTEM_DESIGN.md` 中的 open questions 不需要在启动前全部回答；它们会在 Week 1 的后端体感模块中逐步收敛，并在 Week 2 实现前写回 `SPEC.md` / `SYSTEM_DESIGN.md`。
+## 4. Sprint 01 Target
 
-## 3. 两周目标
-
-第一轮两周迭代目标：
+Build a minimum full-stack AI Gateway console:
 
 ```text
+Next.js chat console
+  -> FastAPI gateway
+  -> Pydantic request validation
+  -> session/message/job persistence
+  -> optional async queue job path
+  -> native LLM provider adapter or Bedrock experiment
+  -> SSE streaming response
+  -> timeout/rate-limit retry handling
+  -> token usage and cost estimate
+  -> trace_id structured logs
+  -> pytest-backed acceptance
+```
+
+The app should be simple enough to finish in two weeks, but serious enough to defend in interviews.
+
+## 5. Two-Week Execution Shape
+
 Week 1:
-  后端体感与架构内化
-  通过小实验、对照实现、攻防审讯、日志和测试建立 OpenClaw-Kernel 的系统感。
+
+```text
+Backend and AI Gateway immersion.
+No full implementation yet.
+Design the contracts, run small experiments, revise SPEC/TEST_PLAN, and freeze the Week 2 build boundary.
+```
 
 Week 2:
-  Vibe Coding 构建与审计封存
-  用 SPEC 约束 AI 生成，逐步练习多 Agent 编排，产出可运行、可测试、可面试防守的 kernel 项目。
-```
-
-## 4. 当前项目边界
-
-OpenClaw-Kernel 只实现核心闭环：
 
 ```text
-POST /sessions
-POST /sessions/{id}/messages
-  -> validate message
-  -> persist user message
-  -> enqueue agent job
-  -> async worker consumes job
-  -> fake LLM runner generates reply
-  -> persist assistant reply
-  -> expose job/session status
-  -> trace_id links the whole flow
+Vibe Coding implementation.
+Build the FastAPI gateway, minimal Next.js console, SSE streaming, provider adapter, token accounting, tests, logs, and interview artifact.
 ```
 
-当前重点：
+## 6. Sprint 01 Daily Map
 
-- FastAPI gateway。
-- Pydantic contracts。
-- route / service / repository 分层。
-- SQLAlchemy async persistence。
-- Alembic migration workflow。
-- `asyncio.Queue` event bus。
-- async dispatcher / worker。
-- retry / backoff / failure state。
-- structlog + trace_id。
-- pytest。
-- interview defense。
+Week 1:
 
-当前不做：
+- Day 1: HTTP boundary, Pydantic contracts, route/service split.
+- Day 2: persistence, SQLAlchemy async, transactions, Alembic, token-usage data shape.
+- Day 3: `asyncio.Queue`, job lifecycle, backpressure, and the difference between queueing and SSE.
+- Day 4: LLM provider adapter, AWS Bedrock experiment, timeout, rate-limit retry, fake provider for tests.
+- Day 5: SSE protocol experiment, token/cost calculator, trace_id logs, final SPEC freeze.
 
-- 完整 OpenClaw port。
-- 完整插件生态。
-- 真实渠道接入。
-- 真实 LLM provider 集成。
-- Redis / Kafka / Celery。
-- 精致前端。
-- Auth / payment / long-tail CRUD。
+Week 2:
 
-## 5. 旧成果如何使用
+- Day 6: scaffold FastAPI + Next.js app shell, shared contracts, ADLC rules.
+- Day 7: implement persistence and migrations.
+- Day 8: implement provider adapter, SSE streaming, token/cost accounting.
+- Day 9: implement queue worker path, resilience, observability, full tests.
+- Day 10: audit, documentation, demo script, interview notes, portfolio freeze.
 
-旧成果仍有价值：
+## 7. Current Non-Goals
 
-- `openclaw_python/`: 参考 FastAPI、Pydantic、SQLAlchemy、测试等 pre-pivot 实现。
-- `openclaw/`: 原始 OpenClaw 源码，用于理解 Gateway / sessions / agents / plugin 等架构思想。
-- `archive/old_phase_plan/`: 旧路线、RFC、daily logs、学习地图和 LLM Twin 策略历史。
-- `references/`: 新方法论参考材料，只作为外部战略参考，不直接污染 sprint 代码库。
+Do not build in Sprint 01:
 
-使用原则：
+- full OpenClaw port;
+- full plugin marketplace;
+- real Discord/Telegram/WhatsApp channels;
+- Redis/Kafka/Celery production queue;
+- LangGraph or multi-agent runtime;
+- RAG;
+- auth/payment/user-management system;
+- polished frontend product UI;
+- Kubernetes/cloud deployment.
+
+These are future sprint options.
+
+## 8. Collaboration Discipline
+
+- SPEC before code.
+- Data flow before implementation.
+- One closed loop before broad feature coverage.
+- AI generates at high throughput; human owns architecture, tests, and acceptance.
+- No `print()` in app code; use structured logs with `trace_id`.
+- Every day must produce:
+  - one observable mini experiment;
+  - one SPEC or TEST_PLAN refinement;
+  - one interview-defense note;
+  - one explicit trade-off decision.
+- Generated code is not accepted until it passes tests and can be explained.
+
+## 9. Recommended Startup Prompt
 
 ```text
-借鉴旧成果，不继承旧节奏。
-参考旧代码，不盲目复制结构。
-吸收 OpenClaw 架构思想，只重写 kernel 闭环。
+请阅读 00_START_HERE.md、02_SPRINT_01_OPENCLAW_KERNEL.md、03_WEEK1_BACKEND_IMMERSION.md、04_WEEK2_VIBE_BUILD_PLAN.md、sprint_01_openclaw_kernel/SPEC.md 和 sprint_01_openclaw_kernel/TODO.md。
+
+然后带我从 TODO 里的当前 Day 开始执行 Sprint 01。
+请严格遵守：先做当天的小实验、SPEC/TEST_PLAN 修订和面试防守，再进入实现；Week 2 才做完整全栈交付。
 ```
 
-## 6. 推荐启动指令
+## 10. Sprint File Protocol
 
-```text
-请先阅读 00_START_HERE.md、01_CURRENT_STRATEGY.md、02_SPRINT_01_OPENCLAW_KERNEL.md 和 03_WEEK1_BACKEND_IMMERSION.md。
-然后带我启动 Sprint 01: OpenClaw-Kernel 的 Week 1 Day 1。
-今天先不写完整项目代码，只做 HTTP/Pydantic/分层边界的后端体感训练：术语、三档实现对比、攻防审讯、小实验、测试红线和口头复述。
-```
+- New technical constraints go into `SPEC.md`.
+- New architecture decisions go into `SYSTEM_DESIGN.md`.
+- New acceptance tests go into `TEST_PLAN.md`.
+- New AI collaboration rules go into `AGENT_RULES.md`.
+- New interview defenses go into `INTERVIEW_NOTES.md`.
+- Next actions go into `TODO.md`.
 
-## 7. 协作纪律
-
-- 先 SPEC，后代码。
-- 先数据流，后实现。
-- AI 负责高通量生成，人类负责系统主权。
-- 不以手写量证明理解，以审计、测试、日志和复述证明理解。
-- 每日必须产出一个可观察的小实验、一组测试红线、一段面试防守话术。
-- Week 2 之前，不启动完整项目实现。
-- Sprint 文档初稿只提供起跑线；Week 1 必须持续审查、修改、收紧它们。
-
-## 8. Sprint File Protocol
-
-这些文件不是业界强制标准，而是本 sprint 的 Vibe Coding 操作协议。文件类型来自常见工程实践，协作方式由本项目自定义。
-
-使用原则：
-
-```text
-00_START_HERE.md
-  给人类学习者和教练型 agent 读。
-  负责启动上下文、学习节奏、文件地图和协作纪律。
-
-sprint_01_openclaw_kernel/PRD.md
-  定义为什么做、给谁看、成功标准是什么。
-  用于防止 scope drift。
-
-sprint_01_openclaw_kernel/SPEC.md
-  Week 2 Vibe Coding 的最高技术约束。
-  Orchestrator 和 implementer 必须先读它；代码验收也必须对照它。
-
-sprint_01_openclaw_kernel/AGENT_RULES.md
-  规定 AI agents 如何工作、如何避免上下文漂移、哪些行为禁止。
-
-sprint_01_openclaw_kernel/SYSTEM_DESIGN.md
-  记录数据流、状态流、架构判断、trade-off 和 open questions。
-
-sprint_01_openclaw_kernel/TEST_PLAN.md
-  记录必须满足的测试红线。
-  QA/Auditor 使用它验收；Implementer 也必须用它反向约束实现。
-
-sprint_01_openclaw_kernel/INTERVIEW_NOTES.md
-  把架构判断转化为面试攻防话术。
-
-sprint_01_openclaw_kernel/TODO.md
-  当前任务板。
-  只记录下一步动作，不承载架构真理。
-```
-
-Week 2 实现前，Vibe Coding agent 必须按这个顺序读取：
-
-1. `00_START_HERE.md`
-2. `sprint_01_openclaw_kernel/AGENT_RULES.md`
-3. `sprint_01_openclaw_kernel/SPEC.md`
-4. `sprint_01_openclaw_kernel/SYSTEM_DESIGN.md`
-5. `sprint_01_openclaw_kernel/TEST_PLAN.md`
-6. `sprint_01_openclaw_kernel/TODO.md`
-
-修改规则：
-
-- 新的技术硬约束写入 `SPEC.md`。
-- 新的架构判断或 trade-off 写入 `SYSTEM_DESIGN.md`。
-- 新的测试红线写入 `TEST_PLAN.md`。
-- 新的 agent 协作规则写入 `AGENT_RULES.md`。
-- 新的面试防守点写入 `INTERVIEW_NOTES.md`。
-- 只是下一步动作时，写入 `TODO.md`。

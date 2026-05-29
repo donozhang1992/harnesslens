@@ -1,127 +1,117 @@
 # SYSTEM_DESIGN: OpenClaw-Kernel
 
-> Status: Draft scaffold. This file contains an initial architecture sketch and open questions. Week 1 should turn experiments and trade-off discussions into explicit design decisions.
+> Status: Sprint 01 working design. Keep this file aligned with SPEC and TEST_PLAN.
 
 ## 1. Target Architecture
 
 ```text
-FastAPI route
+Browser / Next.js Gateway Console
+  -> FastAPI route
   -> Pydantic schema
   -> service
   -> repository
   -> SQLAlchemy AsyncSession
-  -> database
+  -> SQLite database
 
-message service
+FastAPI streaming path
+  -> provider adapter
+  -> fake provider or AWS Bedrock adapter
+  -> SSE chunks
+  -> frontend streaming UI
+
+message service background path
   -> QueueBackend
   -> asyncio.Queue
   -> worker
-  -> fake LLM runner
+  -> provider adapter / fake provider
   -> repository
 ```
 
 ## 2. Data Lifecycle
 
 ```text
-Client submits message
-  -> payload validated
+User submits message
+  -> frontend creates request
+  -> FastAPI assigns or accepts trace_id
+  -> Pydantic validates payload
+  -> service checks session
   -> user message persisted
-  -> job created
-  -> job enqueued
-  -> worker marks job running
-  -> fake LLM runner returns reply or error
-  -> assistant reply persisted on success
-  -> job completed or failed
-  -> client queries job/messages
+  -> job/token metadata initialized
+  -> provider adapter called directly for SSE path
+     OR job enqueued for worker path
+  -> assistant chunks stream to frontend
+  -> final assistant message and token usage persisted
+  -> logs reconstruct lifecycle through trace_id
 ```
 
-## 3. Key Design Decisions
+## 3. Layer Ownership
 
-### Sprint File Usage
-
-`00_START_HERE.md` is for the learner and coach agent. Week 2 Vibe Coding agents must treat `SPEC.md` as the highest technical constraint, `AGENT_RULES.md` as operating discipline, `SYSTEM_DESIGN.md` as architecture rationale, and `TEST_PLAN.md` as acceptance redlines.
-
-`SPEC.md` must link implementation acceptance to `TEST_PLAN.md`; otherwise implementers may generate code without matching the intended tests.
-
-### HTTP Boundary And Layer Ownership
-
-For `POST /sessions/{session_id}/messages`:
-
-```text
-Client
-  -> FastAPI/Pydantic boundary validates MessageCreateRequest
-  -> route receives validated request
-  -> MessageService.submit_user_message(session_id, request, trace_id)
-  -> SessionRepository.get(session_id)
-  -> MessageRepository.insert_user_message(...)
-  -> JobRepository.insert_queued_job(...)
-  -> database commit succeeds
-  -> QueueBackend.enqueue(job_id, trace_id)
-  -> route serializes MessageAcceptedResponse
-  -> route returns 202 Accepted
-```
-
-Layer decisions:
-
-- Pydantic validates payload shape and field constraints.
-- Route maps HTTP input/output and service exceptions.
-- Service owns use-case decisions and generates `message_id` / `job_id`.
+- Frontend owns user interaction and display of response/metadata.
+- Route owns HTTP translation.
+- Pydantic owns external contract validation.
+- Service owns use-case decisions.
 - Repository owns persistence details.
-- DB or repository owns `created_at`.
+- Provider adapter owns SDK-specific calls.
 - QueueBackend owns dispatch implementation details.
-- Middleware or route entry owns `trace_id` creation or propagation.
+- Worker owns background execution.
+- Logging middleware or route entry owns trace_id creation/propagation.
 
-Client message submission accepts only `role=user`. Assistant messages are created by the worker.
+## 4. Queue vs SSE Boundary
 
-### Use `asyncio.Queue` For Sprint 01
-
-Reason:
-
-- fastest way to learn async dispatch and backpressure;
-- no external service dependency;
-- enough to demonstrate producer/consumer architecture.
-
-Known limitations:
-
-- in-memory jobs are lost on process restart;
-- not cross-process;
-- not durable;
-- not suitable for production queueing.
-
-Upgrade path:
-
-- Redis Streams;
-- Celery + Redis;
-- Kafka;
-- RabbitMQ.
-
-The queue must be hidden behind a `QueueBackend` abstraction.
-
-### Job Table Versus Queue Item
-
-The job table is the business state source of truth. It supports job status queries, recovery notes, auditability, and interview defense.
-
-The queue item is an execution notification. For Sprint 01 it may be an in-memory `asyncio.Queue` item. In later versions it may become an SQS, Redis Streams, Celery, Kafka, or RabbitMQ message.
-
-This is intentional duplication of identifiers, not duplicated responsibility:
+SSE and queueing solve different problems:
 
 ```text
-jobs table
-  -> domain state machine
-  -> queryable status
-  -> recovery/audit source
+SSE:
+  server -> browser streaming transport
+  useful for token-by-token UX and TTFT measurement
 
-queue item
-  -> delivery mechanism
-  -> worker wake-up / pull target
-  -> not the source of business truth
+Queue:
+  producer -> worker background dispatch
+  useful for buffering, async jobs, retries, and status inspection
 ```
 
-### Enqueue After Commit
+Sprint 01 may use both:
 
-The service should create user message and job records inside a database transaction. Enqueue must happen only after the database commit succeeds.
+- SSE path demonstrates AI Gateway streaming.
+- Queue path demonstrates backend async dispatch and worker lifecycle.
 
-This avoids a worker receiving a `job_id` before the job exists in the database.
+The two paths must share provider adapter, logging, and error-classification concepts where practical.
+
+## 5. Provider Strategy
+
+Use a provider adapter interface to avoid provider lock-in.
+
+Representative depth:
+
+- AWS Bedrock is the cloud-provider experiment because the learner knows AWS well.
+- OpenAI/Anthropic/Gemini/Azure OpenAI are comparison surfaces, not all mandatory implementations.
+- Fake provider is mandatory for tests.
+
+Provider adapter must normalize:
+
+- input messages;
+- model/provider config;
+- streaming chunks;
+- errors;
+- token usage;
+- latency;
+- trace_id logging.
+
+## 6. Persistence Decisions
+
+Minimum tables/concepts:
+
+- sessions;
+- messages;
+- jobs;
+- token_usage or token usage fields associated with messages/jobs.
+
+Transaction rule:
+
+```text
+Create user message + job + initial metadata in one transaction.
+Commit before enqueue.
+```
 
 Known risk:
 
@@ -130,37 +120,76 @@ database commit succeeds
 enqueue fails
 ```
 
-This creates a half-success state: the job exists as queued in the database but may not be visible to the worker queue. Sprint 01 must make this observable through structured logs and documentation. Future options include recovery scanning, an `enqueue_failed` state, DB polling, or a transactional outbox.
+Sprint 01 must make this visible in logs. Future production options include transactional outbox, recovery scanner, or queue-as-source alternatives.
 
-### DB Polling Trade-Off
+## 7. Why `asyncio.Queue` In Sprint 01
 
-DB polling can avoid DB-plus-queue double-write risk because the job table itself becomes the worker source. It also supports API/worker process separation.
+Reasons:
 
-Trade-offs:
+- fastest way to learn producer/consumer flow;
+- no external infrastructure;
+- enough to demonstrate backpressure and worker lifecycle;
+- easy to test.
 
-- polling adds database query load;
-- indexes and batch size matter;
-- multiple workers need atomic claim/lock behavior;
-- batch polling improves performance but does not prevent duplicate processing;
-- claim/lock protects correctness.
+Limitations:
 
-### Use Fake LLM Runner
+- in-memory jobs are lost on process restart;
+- not cross-process;
+- not durable;
+- not suitable for production queueing.
 
-Reason:
+Upgrade paths:
 
-- focus on backend architecture and failure handling;
-- avoid API key, cost, and provider drift;
-- simulate success, transient errors, and permanent errors deterministically.
+- AWS SQS for cloud-native managed queue;
+- Redis Streams;
+- Celery + Redis;
+- Kafka;
+- RabbitMQ.
 
-## 4. Open Questions
+The queue must stay behind `QueueBackend`.
 
-These questions are intentionally left open at sprint start.
+## 8. Token Economics
 
-They should be answered during Week 1 backend immersion and written back into `SPEC.md` / `SYSTEM_DESIGN.md` before Week 2 implementation begins.
+Sprint 01 should record or estimate:
 
-- Should job state be persisted in DB from day one, or start in memory during experiments?
-- Should worker lifecycle be controlled through FastAPI lifespan?
-- What is the exact minimum set of job status fields?
-- How should trace_id be injected and propagated?
-- Should Sprint 01 represent enqueue failure as `queued` plus logs, or add an explicit `enqueue_failed` status?
-- Should Week 2 implement recovery scanning, or document it as a future upgrade?
+- prompt_tokens;
+- completion_tokens;
+- total_tokens;
+- estimated_cost;
+- currency;
+- provider;
+- model;
+- TTFT when streaming;
+- total latency.
+
+Exact pricing may be configured manually for the chosen model. The important skill is not memorizing every price; it is showing cost-aware gateway design.
+
+## 9. Frontend Scope
+
+The frontend is a minimum Gateway Console:
+
+- message input;
+- send button;
+- streamed assistant response;
+- provider/model display or selector if simple;
+- trace_id display;
+- token/cost display;
+- job status display when using async path.
+
+Do not build:
+
+- auth;
+- dashboards;
+- complex state management;
+- product polish;
+- marketing page.
+
+## 10. Open Questions To Resolve During Week 1
+
+- Exact streaming endpoint path.
+- Whether Day 8 uses real Bedrock call or documented Bedrock adapter plus fake provider.
+- Exact token pricing config format.
+- Whether token usage is a separate table or message/job fields.
+- Whether background queue path is required in UI or tested primarily through backend/API.
+- Exact frontend/backend contract for final SSE metadata event.
+
