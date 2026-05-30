@@ -1,0 +1,69 @@
+#harnesslens-root {
+  margin: 12px 0;
+}
+
+.harnesslens-shell {
+  color: var(--fgColor-default, #1f2328);
+  font: 12px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.harnesslens-surface {
+  background: var(--bgColor-default, #ffffff);
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+}
+
+.harnesslens-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+}
+
+.harnesslens-filter,
+.harnesslens-panel button {
+  background: transparent;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+  color: var(--fgColor-default, #1f2328);
+  cursor: pointer;
+  font: inherit;
+  padding: 4px 8px;
+}
+
+.harnesslens-filter[aria-pressed="true"] {
+  background: var(--bgColor-accent-muted, #ddf4ff);
+  border-color: var(--borderColor-accent-emphasis, #0969da);
+}
+
+.harnesslens-panel {
+  border-top: 1px solid var(--borderColor-muted, #d8dee4);
+  padding: 8px;
+}
+
+.harnesslens-panel p,
+.harnesslens-panel ul {
+  margin: 6px 0 0;
+}
+
+.harnesslens-panel ul {
+  list-style: none;
+  padding: 0;
+}
+
+.harnesslens-panel li + li {
+  margin-top: 4px;
+}
+
+.harnesslens-panel button {
+  border: 0;
+  color: var(--fgColor-accent, #0969da);
+  overflow-wrap: anywhere;
+  padding: 0;
+  text-align: left;
+}
+
+[data-harnesslens-highlight="true"] {
+  outline: 2px solid var(--focus-outlineColor, #0969da);
+  outline-offset: 2px;
+}
