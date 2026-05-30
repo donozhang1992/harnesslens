@@ -19,9 +19,19 @@
 - message can be saved and listed;
 - messages are ordered predictably;
 - job status can be created and updated;
-- token usage can be saved or attached to message/job;
-- transaction failure does not leave inconsistent message/job state;
-- Alembic migration creates expected tables.
+- creating a user message and queued job succeeds in one shared service-owned transaction;
+- if job creation fails after message creation, neither `Message` nor `Job` is persisted;
+- repository methods do not call commit directly;
+- queue enqueue is attempted only after the database transaction commits;
+- if enqueue fails after commit, the job remains persisted with a recoverable enqueue failure state;
+- job recovery or competing workers must not process completed jobs again;
+- token usage can be saved as first-class provider invocation data;
+- token usage requires `trigger_message_id`;
+- token usage may omit `job_id` for streaming paths;
+- token usage may omit `assistant_message_id` when the assistant message is not yet persisted or the provider call fails;
+- multiple `TokenUsage` rows may be associated with the same triggering message or job;
+- Alembic migration creates expected tables from an empty database;
+- application startup does not depend on `Base.metadata.create_all()` for main schema creation.
 
 ## 3. HTTP Boundary Tests
 

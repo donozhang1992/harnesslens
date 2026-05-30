@@ -98,6 +98,58 @@ model-specific approximation. The important part is that cost becomes a first
 class gateway concern, visible in logs, metadata, and the UI.
 ```
 
+### How did you design persistence and transactions?
+
+```text
+In my gateway design, persistence is not just storage; it is the source of truth
+for the AI request lifecycle. A user Message and its queued Job are created in
+the same transaction because the Job is the processing commitment for that
+Message. If the Message commits without the Job, the system has accepted user
+input but created no execution path.
+
+Repositories do not commit because they do not know the full business workflow.
+The service layer owns transaction boundaries with SQLAlchemy AsyncSession
+transaction context managers. For this sprint, I intentionally avoided a custom
+Unit of Work abstraction because AsyncSession.begin() gives enough consistency
+without adding extra abstraction.
+```
+
+### Why enqueue after commit?
+
+```text
+Queue enqueue happens after the database commit because the queue is only an
+execution signal, not the source of truth. The durable Job record must exist
+before a worker can process it. If enqueue fails, I persist a recoverable
+enqueue status and rely on structured logs plus startup, scheduled, or explicit
+recovery scans.
+```
+
+### Why Alembic instead of create_all?
+
+```text
+Alembic manages schema lifecycle through versioned incremental migrations.
+SQLAlchemy models describe the current intended schema shape, while Alembic
+migration files describe how a real database moves from one revision to the
+next. I do not use Base.metadata.create_all() in app startup for the main schema
+because schema changes should be reviewable, repeatable, and part of the
+release workflow rather than an implicit runtime side effect.
+```
+
+### Why is TokenUsage linked to trigger_message_id?
+
+```text
+TokenUsage represents one provider invocation. In Sprint 01, every provider
+invocation must be traceable to the user Message that triggered it, so
+trigger_message_id is required. job_id is nullable because a direct streaming
+path may not create a background Job. assistant_message_id is nullable because
+a provider call may fail before an assistant Message is persisted, or a future
+internal step may not produce a user-visible assistant message.
+
+Future multi-step or multi-agent flows do not remove the need for traceability
+to the triggering message. They only mean multiple TokenUsage rows may share the
+same trigger_message_id or job_id.
+```
+
 ### How do you debug a failed streamed request?
 
 ```text
@@ -120,7 +172,59 @@ final metadata, and persisted state.
 - Local structured logs vs LangSmith/LangFuse.
 - Minimum frontend console vs polished product UI.
 
-## 5. Final Notes
+## 5. Day 2 Core Memory: Persistence, Transactions, Alembic, TokenUsage
+
+Core judgments to remember:
+
+- Message and Job must be created in one shared business transaction because the Job is the processing commitment for the Message.
+- Repositories should not commit because they do not know the full business workflow; services own transaction boundaries.
+- Queue enqueue happens after commit because workers should only receive durable job IDs.
+- Alembic manages schema initialization and evolution outside request runtime; app startup must not manage the main schema with `create_all()`.
+- TokenUsage is per provider invocation and must have `trigger_message_id`; `job_id` and `assistant_message_id` may be nullable for streaming, failure, and future internal-step cases.
+
+Self-check questions:
+
+```text
+Q1: Why must Message and Job be created in the same transaction?
+Q2: Why should repositories not commit?
+Q3: Why does queue enqueue happen after DB commit?
+Q4: What does Alembic add that create_all does not?
+Q5: Why is TokenUsage per provider invocation, and why is trigger_message_id required?
+```
+
+Interview wording:
+
+```text
+The service owns the transaction boundary. Repositories can query and add ORM
+objects, but they do not commit. The service runs message creation and job
+creation inside one transaction. If the whole operation succeeds, the
+transaction commits. If any part fails, it rolls back, so the database does not
+keep a partial workflow state.
+```
+
+Useful vocabulary:
+
+```text
+begin/start a transaction
+  open the transaction
+
+transaction boundary
+  the scope of operations protected by one commit-or-rollback decision
+
+commit the transaction
+  make the changes durable
+
+roll back the transaction
+  undo the changes in that transaction
+
+close/end the transaction
+  generic wording after either commit or rollback
+
+run these operations inside one transaction
+  execute them under one shared atomic boundary
+```
+
+## 6. Final Notes
 
 Day 10 must update this file with:
 
