@@ -1,4 +1,4 @@
-# IntentLink Migration Task Plan
+# HarnessLens Migration Task Plan
 
 ## Task Status Lifecycle
 
@@ -49,20 +49,20 @@
 
 ## Phase 2: Remove Git Hook From Active MVP
 
-`RESET-REMOVE-HOOK-01` - Remove or quarantine Git hook prototype
+`RESET-REMOVE-HOOK-01` - Remove deprecated metadata tool
 
 - Owner: migration worker.
-- Status: pending.
+- Status: done.
 - Depends on: CORE-IMPL-02.
 - Own files: `tools/git-hook/**`, root package scripts, package lock updates.
-- Acceptance: active workspace test/build no longer depends on Git hook. Deprecated code is deleted or clearly quarantined outside MVP path.
+- Acceptance: active workspace test/build no longer depends on deprecated metadata tooling.
 
 ## Phase 3: Browser Extension Reset
 
 `BROWSER-TEST-01` - Browser category isolation tests
 
 - Owner: browser test worker.
-- Status: pending.
+- Status: done.
 - Depends on: CORE-IMPL-02.
 - Own files: browser extension tests/fixtures.
 - Acceptance: tests cover changed-file DOM adapter, category counts, All/Harness/Validation/Code filters, Harness panel, and jump-to-native-diff behavior. Tests do not mention Linked/Scoped/Grouped.
@@ -70,9 +70,9 @@
 `BROWSER-IMPL-01` - Browser category isolation implementation
 
 - Owner: browser implementation worker.
-- Status: pending.
+- Status: done.
 - Depends on: BROWSER-TEST-01.
-- Own files: `extensions/browser/**` or `extensions/chrome/**` during migration if rename is deferred.
+- Own files: `extensions/browser/**`.
 - Acceptance: browser tests pass, GitHub native diff remains intact, UI uses Harness / Validation / Code language only.
 
 ## Phase 4: VS Code Extension MVP

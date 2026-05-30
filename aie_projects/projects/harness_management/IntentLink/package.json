@@ -1,26 +1,22 @@
 {
-  "name": "intentlink",
+  "name": "harnesslens",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "workspaces": [
     "packages/*",
-    "tools/*",
     "extensions/*"
   ],
   "scripts": {
-    "test": "npm run test:core && npm run test:hook && npm run test:chrome",
-    "test:core": "npm --workspace @intentlink/core run test",
-    "test:hook": "npm --workspace @intentlink/git-hook run test",
-    "test:chrome": "npm --workspace @intentlink/chrome-extension run test",
-    "build": "npm run build:core && npm run build:hook && npm run build:chrome",
-    "build:core": "npm --workspace @intentlink/core run build",
-    "build:hook": "npm --workspace @intentlink/git-hook run build",
-    "build:chrome": "npm --workspace @intentlink/chrome-extension run build",
-    "typecheck": "npm run typecheck:core && npm run typecheck:hook && npm run typecheck:chrome",
-    "typecheck:core": "npm --workspace @intentlink/core run typecheck",
-    "typecheck:hook": "npm --workspace @intentlink/git-hook run typecheck",
-    "typecheck:chrome": "npm --workspace @intentlink/chrome-extension run typecheck"
+    "test": "npm run test:core && npm run test:browser",
+    "test:core": "npm --workspace @harnesslens/core run test",
+    "test:browser": "npm --workspace @harnesslens/browser-extension run test",
+    "build": "npm run build:core && npm run build:browser",
+    "build:core": "npm --workspace @harnesslens/core run build",
+    "build:browser": "npm --workspace @harnesslens/browser-extension run build",
+    "typecheck": "npm run typecheck:core && npm run typecheck:browser",
+    "typecheck:core": "npm --workspace @harnesslens/core run typecheck",
+    "typecheck:browser": "npm --workspace @harnesslens/browser-extension run typecheck"
   },
   "devDependencies": {
     "@testing-library/react": "^15.0.0",
