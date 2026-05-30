@@ -26,11 +26,18 @@ export function readGithubChangedFileBlocks(
 }
 
 function findFileElements(root: ParentNode): HTMLElement[] {
+  const selector = "[data-file-name], [data-path], [data-testid='file']";
   return Array.from(
     root.querySelectorAll<HTMLElement>(
-      "[data-file-name], [data-path], [data-testid='file']",
+      selector,
     ),
-  ).filter((element) => readFilePath(element) !== undefined);
+  ).filter((element) => {
+    if (readFilePath(element) === undefined) {
+      return false;
+    }
+
+    return element.parentElement?.closest(selector) === null;
+  });
 }
 
 function readFilePath(element: HTMLElement): string | undefined {

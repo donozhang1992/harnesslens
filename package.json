@@ -8,15 +8,18 @@
     "extensions/*"
   ],
   "scripts": {
-    "test": "npm run test:core && npm run test:browser",
+    "test": "npm run test:core && npm run test:browser && npm run test:vscode",
     "test:core": "npm --workspace @harnesslens/core run test",
     "test:browser": "npm --workspace @harnesslens/browser-extension run test",
-    "build": "npm run build:core && npm run build:browser",
+    "test:vscode": "npm --workspace @harnesslens/vscode-extension run test",
+    "build": "npm run build:core && npm run build:browser && npm run build:vscode",
     "build:core": "npm --workspace @harnesslens/core run build",
     "build:browser": "npm --workspace @harnesslens/browser-extension run build",
-    "typecheck": "npm run typecheck:core && npm run typecheck:browser",
+    "build:vscode": "npm --workspace @harnesslens/vscode-extension run build",
+    "typecheck": "npm run typecheck:core && npm run typecheck:browser && npm run typecheck:vscode",
     "typecheck:core": "npm --workspace @harnesslens/core run typecheck",
-    "typecheck:browser": "npm --workspace @harnesslens/browser-extension run typecheck"
+    "typecheck:browser": "npm --workspace @harnesslens/browser-extension run typecheck",
+    "typecheck:vscode": "npm --workspace @harnesslens/vscode-extension run typecheck"
   },
   "devDependencies": {
     "@testing-library/react": "^15.0.0",

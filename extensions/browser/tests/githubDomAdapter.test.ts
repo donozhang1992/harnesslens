@@ -25,4 +25,14 @@ describe("GitHub DOM adapter", () => {
     expect(() => readGithubChangedFileBlocks(document)).not.toThrow();
     expect(readGithubChangedFileBlocks(document)).toEqual([]);
   });
+
+  it("returns only the native outer block when matching attributes are nested", () => {
+    document.body.innerHTML = `
+      <div data-testid="file" data-file-name="AGENTS.md">
+        <span data-path="AGENTS.md">AGENTS.md</span>
+      </div>
+    `;
+
+    expect(readGithubChangedFileBlocks(document)).toHaveLength(1);
+  });
 });

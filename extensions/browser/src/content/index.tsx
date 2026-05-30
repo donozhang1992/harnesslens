@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   BrowserIsolationView,
@@ -25,12 +25,29 @@ export function mountHarnessLens(rootDocument: Document = document): void {
   }
 
   createRoot(mountPoint).render(
-    <HarnessLensApp blocks={blocks} />,
+    <HarnessLensApp initialBlocks={blocks} rootDocument={rootDocument} />,
   );
 }
 
-function HarnessLensApp({ blocks }: { blocks: GithubChangedFileBlock[] }) {
+function HarnessLensApp({
+  initialBlocks,
+  rootDocument,
+}: {
+  initialBlocks: GithubChangedFileBlock[];
+  rootDocument: Document;
+}) {
+  const [blocks, setBlocks] = useState(initialBlocks);
   const [activeFilter, setActiveFilter] = useState<CategoryFilter>("all");
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const nextBlocks = readGithubChangedFileBlocks(rootDocument);
+      filterChangedFileBlocks(nextBlocks, activeFilter);
+      setBlocks(nextBlocks);
+    });
+    observer.observe(rootDocument.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [activeFilter, rootDocument]);
 
   const applyFilter = (filter: CategoryFilter) => {
     filterChangedFileBlocks(blocks, filter);
