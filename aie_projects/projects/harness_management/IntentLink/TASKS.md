@@ -80,7 +80,7 @@
 `VSCODE-TEST-01` - VS Code grouped changes tests
 
 - Owner: VS Code test worker.
-- Status: pending.
+- Status: done.
 - Depends on: CORE-IMPL-02.
 - Own files: `extensions/vscode/tests/**` and test fixtures.
 - Acceptance: tests cover mocked changed-files provider, grouping, tree items, count summary, and open file/diff command seams.
@@ -88,24 +88,40 @@
 `VSCODE-IMPL-01` - VS Code grouped changes implementation
 
 - Owner: VS Code implementation worker.
-- Status: pending.
+- Status: done.
 - Depends on: VSCODE-TEST-01.
 - Own files: `extensions/vscode/**`.
 - Acceptance: VS Code extension builds and grouped changed-files tests pass.
+
+`VSCODE-TEST-02` - VS Code activation and native adapter tests
+
+- Owner: VS Code test worker.
+- Status: done.
+- Depends on: VSCODE-IMPL-01.
+- Own files: `extensions/vscode/tests/**`.
+- Acceptance: tests cover Git resource mapping, conservative dedupe, grouped tree nodes, readable unavailable state, refresh registration, native open file/diff commands, and status summary publication.
+
+`VSCODE-IMPL-02` - VS Code activation and native adapter seams
+
+- Owner: VS Code implementation worker.
+- Status: done.
+- Depends on: VSCODE-TEST-02.
+- Own files: `extensions/vscode/src/**`.
+- Acceptance: VS Code activation seam tests pass without leaking VS Code APIs into core.
 
 ## Phase 5: Integration and QA
 
 `INTEGRATION-02` - Active workspace integration
 
 - Owner: main agent or integration worker.
-- Status: pending.
+- Status: done.
 - Depends on: CORE-IMPL-02, RESET-REMOVE-HOOK-01, BROWSER-IMPL-01, VSCODE-IMPL-01.
 - Acceptance: root scripts test/build/typecheck active MVP workspaces only.
 
 `QA-02` - Migration QA
 
 - Owner: QA agent.
-- Status: pending.
+- Status: qa-reviewed.
 - Depends on: INTEGRATION-02.
 - Do not edit files.
 - Acceptance: findings-first report confirms no active MVP Git hook, trailer, relationship, or causality behavior remains.
