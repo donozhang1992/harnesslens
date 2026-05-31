@@ -40,12 +40,17 @@ function HarnessLensApp({
   const [activeFilter, setActiveFilter] = useState<CategoryFilter>("all");
 
   useEffect(() => {
+    const filesBucket = rootDocument.getElementById("files_bucket");
+    if (!filesBucket) {
+      return;
+    }
+
     const observer = new MutationObserver(() => {
       const nextBlocks = readGithubChangedFileBlocks(rootDocument);
       filterChangedFileBlocks(nextBlocks, activeFilter);
       setBlocks(nextBlocks);
     });
-    observer.observe(rootDocument.body, { childList: true, subtree: true });
+    observer.observe(filesBucket, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, [activeFilter, rootDocument]);
 

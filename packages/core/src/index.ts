@@ -56,7 +56,11 @@ export function classifyPath(path: string): ArtifactKind {
     hasSegment(segments, "tests") ||
     hasSegment(segments, "__tests__") ||
     hasSegment(segments, "fixtures") ||
-    /\.(test|spec)\.[cm]?[jt]sx?$/.test(filename)
+    hasSegment(segments, "test-fixtures") ||
+    hasSegment(segments, "snapshots") ||
+    hasSegment(segments, "__snapshots__") ||
+    /\.(test|spec)\.[cm]?[jt]sx?$/.test(filename) ||
+    /\.snap$/.test(filename)
   ) {
     return "validation";
   }

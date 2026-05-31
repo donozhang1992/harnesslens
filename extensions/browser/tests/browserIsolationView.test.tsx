@@ -51,10 +51,13 @@ describe("BrowserIsolationView", () => {
     expect(onRevealHarnessFile).toHaveBeenCalledWith("AGENTS.md");
   });
 
-  it("hides native blocks outside the selected category", () => {
-    filterChangedFileBlocks(blocks, "validation");
-    expect(blocks.map((item) => item.element.hidden)).toEqual([true, false, true]);
-    filterChangedFileBlocks(blocks, "all");
-    expect(blocks.map((item) => item.element.hidden)).toEqual([false, false, false]);
+  it.each([
+    ["all", [false, false, false]],
+    ["harness", [false, true, true]],
+    ["validation", [true, false, true]],
+    ["code", [true, true, false]],
+  ] as const)("shows only %s native blocks", (filter, expected) => {
+    filterChangedFileBlocks(blocks, filter);
+    expect(blocks.map((item) => item.element.hidden)).toEqual(expected);
   });
 });
