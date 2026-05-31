@@ -82,6 +82,13 @@ describe("classifyPath", () => {
     expect(classifyPath("packages/core/fixtures/sample.diff")).toBe(
       "validation",
     );
+    expect(classifyPath("packages/core/test-fixtures/sample.diff")).toBe(
+      "validation",
+    );
+    expect(classifyPath("packages/core/__snapshots__/view.snap")).toBe(
+      "validation",
+    );
+    expect(classifyPath("packages/ui/view.snap")).toBe("validation");
     expect(classifyPath(".github/workflows/ci.yml")).toBe("validation");
     expect(classifyPath("extensions/browser/src/filter.test.ts")).toBe(
       "validation",
