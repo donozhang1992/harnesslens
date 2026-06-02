@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "HarnessLens",
+  "version": "0.1.0",
+  "description": "Review Harness, Validation, and Code changes on GitHub pull requests.",
+  "permissions": [],
+  "host_permissions": ["https://github.com/*"],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*/*/pull/*",
+        "https://github.com/*/*/pull/*/files",
+        "https://github.com/*/*/pull/*/changes"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

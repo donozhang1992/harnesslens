@@ -1,0 +1,49 @@
+{
+  "name": "harnesslens",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/donozhang1992/harnesslens.git"
+  },
+  "bugs": {
+    "url": "https://github.com/donozhang1992/harnesslens/issues"
+  },
+  "homepage": "https://github.com/donozhang1992/harnesslens#readme",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "extensions/*"
+  ],
+  "scripts": {
+    "test": "npm run test:core && npm run build:core && npm run test:browser && npm run test:vscode",
+    "test:core": "npm --workspace @harnesslens/core run test",
+    "test:browser": "npm --workspace @harnesslens/browser-extension run test",
+    "test:vscode": "npm --workspace harnesslens-vscode run test",
+    "build": "npm run build:core && npm run build:browser && npm run build:vscode && npm run verify:build",
+    "build:core": "npm --workspace @harnesslens/core run build",
+    "build:browser": "npm --workspace @harnesslens/browser-extension run build",
+    "build:vscode": "npm --workspace harnesslens-vscode run build",
+    "verify:build": "node scripts/verify-build.mjs",
+    "package": "npm run package:browser && npm run package:vscode",
+    "package:browser": "npm run build:core && npm run build:browser && node scripts/package-browser.mjs",
+    "package:vscode": "npm run build:core && npm run build:vscode && node scripts/package-vscode.mjs",
+    "release:check": "npm test && npm run typecheck && npm run build",
+    "typecheck": "npm run typecheck:core && npm run typecheck:browser && npm run typecheck:vscode",
+    "typecheck:core": "npm --workspace @harnesslens/core run typecheck",
+    "typecheck:browser": "npm --workspace @harnesslens/browser-extension run typecheck",
+    "typecheck:vscode": "npm --workspace harnesslens-vscode run typecheck"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^15.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "jsdom": "^26.0.0",
+    "typescript": "^5.8.0",
+    "vite": "^6.0.0",
+    "vitest": "^4.1.8"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "name": "harnesslens-vscode",
+  "displayName": "HarnessLens",
+  "description": "Review local Git changes grouped as Harness, Validation, and Code.",
+  "version": "0.1.0",
+  "publisher": "harnesslens",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/donozhang1992/harnesslens.git"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "git",
+    "review",
+    "testing",
+    "harness"
+  ],
+  "type": "module",
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "activationEvents": [
+    "onView:harnesslens.changedFiles"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "harnesslens.refresh",
+        "title": "HarnessLens: Refresh Changed Files"
+      },
+      {
+        "command": "harnesslens.openFile",
+        "title": "HarnessLens: Open File"
+      },
+      {
+        "command": "harnesslens.openDiff",
+        "title": "HarnessLens: Open Diff"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "harnesslens.changedFiles",
+          "name": "HarnessLens"
+        }
+      ]
+    },
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "harnesslens.openDiff",
+          "when": "view == harnesslens.changedFiles && viewItem == harnesslens.file",
+          "group": "navigation@1"
+        },
+        {
+          "command": "harnesslens.openFile",
+          "when": "view == harnesslens.changedFiles && viewItem == harnesslens.file",
+          "group": "navigation@2"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "test": "vitest run --config vitest.config.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@harnesslens/core": "0.1.0"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.100.0"
+  }
+}
