@@ -6,6 +6,9 @@ Every agent must read `MIGRATION_PLAN.md` before changing code.
 
 The active workspace follows the Browser + VS Code + Core classification MVP. Do not restore removed metadata or relationship prototype behavior.
 
+Screenshot smoke note: Harness files define review intent and agent operating
+rules for the project.
+
 ## 2. Roles
 
 Main agent:
